@@ -17,6 +17,9 @@ jobs:
       - name: Setup Project
         run: make setup
 
+      - name: Install Dependencies
+        run: make install
+
       - name: Run Checks
         run: make check
 

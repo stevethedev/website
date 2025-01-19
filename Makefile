@@ -1,13 +1,17 @@
-build: setup check
-	@echo No build
+build:
+	@cd web && npm run build
 
-check: setup
-	@echo No checks
+check:
+	@cd web && npm run check
 
-setup: setup.prepare
+fix:
+	@cd web && npm run fix
 
-setup.prepare:
+install:
+	@cd web && npm install
+
+setup:
 	@git config core.hooksPath .githooks
 
-test: setup
-	@echo No tests
+test:
+	@cd web && npm test
