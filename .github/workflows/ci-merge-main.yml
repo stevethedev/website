@@ -1,0 +1,27 @@
+name: CI - Merge Main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci-checks:
+    name: CI Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Project
+        run: make setup
+
+      - name: Run Checks
+        run: make check
+
+      - name: Run Tests
+        run: make test
+
+      - name: Run Build
+        run: make build
