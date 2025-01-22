@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "tsx scripts/build.ts",
+    "build:serve": "npm run build -- --serve",
     "check": "npm-run-all check:*",
     "check:dependencies": "npm-check",
     "check:format": "prettier --check .",
@@ -24,6 +25,7 @@
     "@eslint/js": "^9.18.0",
     "@jest/globals": "^29.7.0",
     "@types/react-dom": "^19.0.3",
+    "cmd-ts": "^0.13.0",
     "esbuild": "^0.24.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
