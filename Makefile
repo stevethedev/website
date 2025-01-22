@@ -8,9 +8,12 @@ fix:
 	@cd web && npm run fix
 
 install:
-	@cd web && npm install
+	@cd web && npm ci
 
-setup:
+serve:
+	docker-compose up --build
+
+setup: install
 	@git config core.hooksPath .githooks
 
 test:
