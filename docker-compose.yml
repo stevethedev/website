@@ -1,5 +1,18 @@
 services:
+  nginx:
+    container_name: nginx
+    image: nginx:alpine-slim
+    depends_on:
+      - web
+      - reader
+      - admin
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+
   web:
+    container_name: web
     build:
       context: "."
       dockerfile_inline: |
@@ -10,7 +23,41 @@ services:
         RUN npm ci
         CMD ["npm", "run", "build:serve"]
     volumes:
-      - ./web/resource:/user/node/app/web/resource
-      - ./web/src:/user/node/app/web/src
-    ports:
-      - "8000:8000"
+      - ./web/resource:/user/node/app/web/resource:ro
+      - ./web/src:/user/node/app/web/src:ro
+    expose:
+      - "8000"
+
+  reader:
+    container_name: reader
+    build:
+      context: "."
+      dockerfile_inline: |
+        FROM rust:1
+        WORKDIR /user/rust/app
+        COPY ./api ./api
+        WORKDIR /user/rust/app/api
+        CMD ["cargo", "run", "--bin", "reader"]
+    volumes:
+      - ./api/src:/user/rust/app/api/src:ro
+      - ./api/Cargo.toml:/user/rust/app/api/Cargo.toml:ro
+      - ./api/Cargo.lock:/user/rust/app/api/Cargo.lock:ro
+    expose:
+      - "8000"
+
+  admin:
+    container_name: admin
+    build:
+      context: "."
+      dockerfile_inline: |
+        FROM rust:1
+        WORKDIR /user/rust/app
+        COPY ./api ./api
+        WORKDIR /user/rust/app/api
+        CMD ["cargo", "run", "--bin", "admin"]
+    volumes:
+      - ./api/src:/user/rust/app/api/src:ro
+      - ./api/Cargo.toml:/user/rust/app/api/Cargo.toml:ro
+      - ./api/Cargo.lock:/user/rust/app/api/Cargo.lock:ro
+    expose:
+      - "8000"
