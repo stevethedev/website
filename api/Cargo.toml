@@ -1,0 +1,15 @@
+[package]
+name = "api"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "reader"
+path = "src/bin/reader.rs"
+
+[[bin]]
+name = "admin"
+path = "src/bin/admin.rs"
+
+[dependencies.actix-web]
+version = "4.9.0"
