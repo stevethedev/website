@@ -1,0 +1,16 @@
+services:
+  web:
+    build:
+      context: "."
+      dockerfile_inline: |
+        FROM node:22-alpine
+        WORKDIR /user/node/app
+        COPY ./web ./web
+        WORKDIR /user/node/app/web
+        RUN npm ci
+        CMD ["npm", "run", "build:serve"]
+    volumes:
+      - ./web/resource:/user/node/app/web/resource
+      - ./web/src:/user/node/app/web/src
+    ports:
+      - "8000:8000"
