@@ -5,11 +5,22 @@ edition = "2021"
 
 [[bin]]
 name = "reader"
-path = "src/bin/reader.rs"
+path = "src/reader.rs"
+
 
 [[bin]]
 name = "admin"
-path = "src/bin/admin.rs"
+path = "src/admin.rs"
 
 [dependencies.actix-web]
 version = "4.9.0"
+
+[dependencies.serde]
+version = "1.0.217"
+features = ["derive"]
+
+[dependencies.serde_derive]
+version = "1.0.217"
+
+[dependencies.serde_json]
+version = "1.0.137"

@@ -1,8 +1,12 @@
 use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 
+mod schema;
+
 #[get("/")]
 async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello, reader!")
+    HttpResponse::Ok().json(schema::hello_world::HelloWorld {
+        message: "Hello, reader!".to_string(),
+    })
 }
 
 #[actix_web::main]
