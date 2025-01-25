@@ -17,7 +17,7 @@ install: setup schema
 	@cd api && cargo build
 
 schema: setup
-	@node ./scripts/schema.js
+	@node ./scripts/schema.mjs
 
 serve: setup schema install
 	docker-compose up --build --watch
