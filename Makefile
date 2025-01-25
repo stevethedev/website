@@ -12,12 +12,12 @@ fix: setup schema
 	@cd web && npm run fix
 	@cd api && cargo fmt
 
-install: setup
+install: setup schema
 	@cd web && npm install
 	@cd api && cargo build
 
 schema: setup
-	@node --trace-deprecation ./scripts/schema.js
+	@node ./scripts/schema.js
 
 serve: setup schema install
 	docker-compose up --build --watch
@@ -29,5 +29,3 @@ setup:
 test: setup schema install
 	@cd web && npm test
 	@cd api && cargo test
-
-.PHONY: schema
