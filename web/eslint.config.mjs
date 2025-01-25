@@ -6,6 +6,7 @@ import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import eslintConfigPrettier from "eslint-config-prettier";
 import { includeIgnoreFile } from "@eslint/compat";
+import pluginStorybook from "eslint-plugin-storybook";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,7 +20,17 @@ export default [
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
+  {
+    ...pluginReact.configs.flat.recommended,
+    settings: {
+      ...pluginReact.configs.flat.recommended["settings"],
+      react: {
+        ...pluginReact.configs.flat.recommended["settings"]?.["react"],
+        version: "detect",
+      },
+    },
+  },
   { rules: { "react/react-in-jsx-scope": "off" } },
+  ...pluginStorybook.configs["flat/recommended"],
   eslintConfigPrettier,
 ];
