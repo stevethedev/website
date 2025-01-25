@@ -14,6 +14,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Cache Node dependencies
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('web/package-lock.json') }}
+          path: |
+            web/node_modules
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-rust-${{ hashFiles('api/Cargo.lock') }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            api/target
+
       - name: Setup Project
         run: make setup
 
