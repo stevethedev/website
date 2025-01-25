@@ -18,10 +18,11 @@
     "check:types": "tsc --noEmit",
     "fix": "npm-run-all fix:* check",
     "fix:format": "prettier --write .",
-    "fix:lint": "eslint . --fix",
+    "fix:lint": "npm run check:lint -- --fix",
     "test": "jest"
   },
   "devDependencies": {
+    "@eslint/compat": "^1.2.5",
     "@eslint/js": "^9.18.0",
     "@jest/globals": "^29.7.0",
     "@types/react-dom": "^19.0.3",

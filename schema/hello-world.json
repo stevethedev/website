@@ -1,0 +1,18 @@
+{
+  "$id": "hello-world.json",
+  "$ref": "#/definitions/Message",
+  "title": "Message",
+  "definitions": {
+    "Message": {
+      "type": "object",
+      "description": "A \"Hello, World!\" message",
+      "required": ["message"],
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "The message to return"
+        }
+      }
+    }
+  }
+}

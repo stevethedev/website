@@ -1,25 +1,31 @@
-build:
+build: setup schema install
 	@cd web && npm run build
 	@cd api && cargo build
 
-check:
+check: setup schema install
+	@npx prettier --check "!api/**/*" "!web/**/*" .
 	@cd web && npm run check
 	@cd api && cargo check
 
-fix:
+fix: setup schema
+	@npx prettier --write "!api/**/*" "!web/**/*" .
 	@cd web && npm run fix
 	@cd api && cargo fmt
 
-install:
-	@cd web && npm ci
+install: setup schema
+	@cd web && npm install
 	@cd api && cargo build
 
-serve:
-	docker-compose up --build
+schema: setup
+	@node ./scripts/schema.mjs
 
-setup: install
+serve: setup schema install
+	docker-compose up --build --watch
+
+setup:
 	@git config core.hooksPath .githooks
+	@npm install --no-save quicktype prettier
 
-test:
+test: setup schema install
 	@cd web && npm test
 	@cd api && cargo test

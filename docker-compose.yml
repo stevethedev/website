@@ -2,62 +2,126 @@ services:
   nginx:
     container_name: nginx
     image: nginx:alpine-slim
+    restart: always
+    develop:
+      watch:
+        - action: sync+restart
+          path: nginx/nginx.conf
+          target: /etc/nginx/nginx.conf
     depends_on:
-      - web
-      - reader
-      - admin
+      - admin-api
+      - admin-web
+      - reader-api
+      - reader-web
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "80:80"
 
-  web:
-    container_name: web
+  admin-web:
+    container_name: admin-web
     build:
       context: "."
       dockerfile_inline: |
-        FROM node:22-alpine
-        WORKDIR /user/node/app
-        COPY ./web ./web
-        WORKDIR /user/node/app/web
-        RUN npm ci
-        CMD ["npm", "run", "build:serve"]
-    volumes:
-      - ./web/resource:/user/node/app/web/resource:ro
-      - ./web/src:/user/node/app/web/src:ro
-    expose:
-      - "8000"
+        FROM node:22-alpine AS schema-build
+        WORKDIR /build
+        COPY . .
+        RUN npm install --global quicktype && node ./scripts/schema.js
 
-  reader:
-    container_name: reader
+        FROM node:22-alpine AS js-build
+        WORKDIR /build
+        COPY --from=schema-build /build/web .
+        RUN npm ci && npm run build
+
+        FROM nginx:alpine
+        RUN rm -rf /usr/share/nginx/html/*
+        COPY --from=js-build /build/dist/admin /usr/share/nginx/html
+    develop:
+      watch:
+        - action: rebuild
+          path: web/src
+        - action: rebuild
+          path: web/resource
+        - action: rebuild
+          path: web/package.json
+
+  reader-web:
+    container_name: reader-web
     build:
       context: "."
       dockerfile_inline: |
+        FROM node:22-alpine AS schema-build
+        WORKDIR /build
+        COPY . .
+        RUN npm install --global quicktype && node ./scripts/schema.js
+
+        FROM node:22-alpine AS js-build
+        WORKDIR /build
+        COPY --from=schema-build /build/web .
+        RUN npm ci && npm run build
+
+        FROM nginx:alpine
+        RUN rm -rf /usr/share/nginx/html/*
+        COPY --from=js-build /build/dist/reader /usr/share/nginx/html
+    develop:
+      watch:
+        - action: rebuild
+          path: web/src
+        - action: rebuild
+          path: web/resource
+        - action: rebuild
+          path: web/package.json
+
+  reader-api:
+    container_name: reader-api
+    build:
+      context: "."
+      dockerfile_inline: |
+        FROM node:22-alpine AS schema-build
+        WORKDIR /build
+        COPY . .
+        RUN npm install --global quicktype && node ./scripts/schema.js
+
+        FROM rust:1 AS rust-build
+        WORKDIR /app
+        COPY --from=schema-build /build/api .
+        RUN cargo build --bin reader
+
         FROM rust:1
         WORKDIR /user/rust/app
-        COPY ./api ./api
-        WORKDIR /user/rust/app/api
-        CMD ["cargo", "run", "--bin", "reader"]
-    volumes:
-      - ./api/src:/user/rust/app/api/src:ro
-      - ./api/Cargo.toml:/user/rust/app/api/Cargo.toml:ro
-      - ./api/Cargo.lock:/user/rust/app/api/Cargo.lock:ro
-    expose:
-      - "8000"
+        COPY --from=rust-build /app/target/debug/reader .
+        CMD ["./reader"]
+    develop:
+      watch:
+        - action: rebuild
+          path: api/src
+        - action: rebuild
+          path: api/Cargo.toml
 
-  admin:
-    container_name: admin
+  admin-api:
+    container_name: admin-api
     build:
       context: "."
       dockerfile_inline: |
+        FROM node:22-alpine AS schema-build
+        WORKDIR /build
+        COPY . .
+        RUN npm install --global quicktype && node ./scripts/schema.js
+
+        FROM rust:1 AS rust-build
+        WORKDIR /app
+        COPY --from=schema-build /build/api .
+        RUN cargo build --bin admin
+
         FROM rust:1
         WORKDIR /user/rust/app
-        COPY ./api ./api
-        WORKDIR /user/rust/app/api
-        CMD ["cargo", "run", "--bin", "admin"]
-    volumes:
-      - ./api/src:/user/rust/app/api/src:ro
-      - ./api/Cargo.toml:/user/rust/app/api/Cargo.toml:ro
-      - ./api/Cargo.lock:/user/rust/app/api/Cargo.lock:ro
+        COPY --from=rust-build /app/target/debug/admin .
+        CMD ["./admin"]
+    develop:
+      watch:
+        - action: rebuild
+          path: api/src
+        - action: rebuild
+          path: api/Cargo.toml
     expose:
       - "8000"
