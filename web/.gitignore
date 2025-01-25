@@ -2,3 +2,5 @@ coverage/
 dist/
 node_modules/
 src/schema/
+
+*storybook.log

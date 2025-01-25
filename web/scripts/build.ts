@@ -1,9 +1,10 @@
 import { copyFile, mkdir, readdir } from "node:fs/promises";
-import { join, basename, extname } from "node:path";
+import { join, basename, extname, resolve, dirname } from "node:path";
 import { URL, fileURLToPath } from "node:url";
 import * as process from "node:process";
 import { command, run, flag, number, option } from "cmd-ts";
-import { context } from "esbuild";
+import { context, Plugin } from "esbuild";
+import { createHash } from "node:crypto";
 
 run(
   command({
@@ -33,7 +34,6 @@ run(
       await Promise.all(copiedFiles);
       const ctx = await getBuildContext(namedEntryPoints);
 
-      console.log(args);
       if (!args.serve) {
         await ctx.dispose();
         return;
@@ -73,11 +73,17 @@ async function getBuildContext(namedEntryPoints: Record<string, string>) {
       }),
     ),
     bundle: true,
-    minify: true,
+    minify: false,
     sourcemap: false,
     outdir: getFilePath("dist"),
     platform: "browser",
     target: "es2015",
+    loader: {
+      ".svg": "file",
+    },
+    mainFields: ["module", "main"],
+    metafile: true,
+    plugins: [svgCopy()],
   });
 
   process.stdout.write("Building...\n");
@@ -124,4 +130,56 @@ async function getEntryPoints(): Promise<string[]> {
 function getFilePath(...fp: string[]): string {
   const baseUrl = new URL(join("..", ...fp), import.meta.url);
   return fileURLToPath(baseUrl);
+}
+
+function svgCopy(): Plugin {
+  const hasher = createHash("sha1");
+  return {
+    name: "copy-svg",
+    setup: (build) => {
+      build.initialOptions.metafile = true;
+
+      const files: Record<string, string> = {};
+
+      build.onResolve({ filter: /\.svg$/, namespace: "file" }, (args) => {
+        const hash = hasher.update(args.resolveDir).digest("hex").slice(0, 8);
+        const filename = `${basename(args.path, extname(args.path))}.${hash}.svg`;
+        const filepath = `./${join(dirname(args.path), "resources", filename).replace(/\\/g, "/")}`;
+
+        files[filepath] = resolve(args.resolveDir, args.path);
+
+        return {
+          path: filepath,
+          namespace: "copy-svg",
+        };
+      });
+
+      build.onLoad({ filter: /.*/, namespace: "copy-svg" }, (args) => {
+        return {
+          contents: args.path,
+          loader: "text",
+        };
+      });
+
+      build.onEnd(async (result) => {
+        const outputs = result.metafile!.outputs;
+
+        for (const [output, { inputs }] of Object.entries(outputs)) {
+          const imports = Object.keys(inputs)
+            .filter((input) => input.startsWith("copy-svg:"))
+            .map((input) => input.slice("copy-svg:".length));
+          if (imports.length === 0) {
+            continue;
+          }
+          const targetDir = dirname(getFilePath(...output.split(/\//g)));
+          for (const path of imports) {
+            const sourcePath = files[path];
+            const destPath = join(targetDir, path);
+            await mkdir(dirname(destPath), { recursive: true });
+            await copyFile(sourcePath, destPath);
+          }
+        }
+      });
+    },
+  };
 }
