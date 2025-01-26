@@ -4,7 +4,7 @@
 }
 
 :local(.social-block-link) {
-  transition: transform 0.1s ease;
+  transition: transform var(--timing-instant) ease;
 
   &:hover {
     transform: translateY(-2.5%) scale(1.1);

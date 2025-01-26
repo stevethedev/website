@@ -43,4 +43,12 @@
   --font-header: "Nunito", sans-serif;
   --font-body: "Open Sans", sans-serif;
   --font-monospace: "Inconsolata", monospace;
+
+  /* timing */
+  --timing-instant: 0.1s;
+  --timing-fast: 0.2s;
+  --timing-normal: 0.3s;
+  --timing-slow: 0.5s;
+  --timing-slower: 0.7s;
+  --timing-slowest: 1s;
 }

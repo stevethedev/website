@@ -1,4 +1,5 @@
 import BaseLayout from "@/component/layout/base";
+import Article from "@/component/ui/article";
 import { Icon } from "@/component/ui/icon-svg";
 import type { LinkElement } from "@/component/ui/main-nav";
 import MainNav from "@/component/ui/main-nav";
@@ -49,11 +50,13 @@ export default function TwoColumnLayout({
     <BaseLayout className={getClassName(styles["two-column"], className)}>
       <PageHeader className={styles["header"]} links={links} />
       <MainNav className={styles["nav"]} linkTree={linkTree} />
-      <section>
-        <main>Page content</main>
-        <aside>
-          <div>Aside 1</div>
-          <div>Aside 2</div>
+      <section className={styles["viewport"]}>
+        <main className={styles.column}>
+          <Article>Page content</Article>
+        </main>
+        <aside className={styles.column}>
+          <Article>Aside 1</Article>
+          <Article>Aside 2</Article>
         </aside>
       </section>
       <footer>Page footer</footer>
