@@ -1,5 +1,6 @@
 import BaseLayout from "@/component/layout/base";
 import Article from "@/component/ui/article";
+import Footer from "@/component/ui/footer";
 import { Icon } from "@/component/ui/icon-svg";
 import type { LinkElement } from "@/component/ui/main-nav";
 import MainNav from "@/component/ui/main-nav";
@@ -59,7 +60,7 @@ export default function TwoColumnLayout({
           <Article>Aside 2</Article>
         </aside>
       </section>
-      <footer>Page footer</footer>
+      <Footer className={styles.footer} />
     </BaseLayout>
   );
 }

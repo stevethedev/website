@@ -25,7 +25,8 @@
   --brand-text: var(--color-primary-dk);
   --brand-light-text: var(--color-gray);
   --brand-white: var(--color-white);
-  --brand-footer: var(--color-primary-dk);
+  --brand-footer-bg: var(--color-primary-dk);
+  --brand-footer-fg: var(--color-gray);
   --brand-page-header: var(--brand-white);
   --background-color: var(--color-off-white);
   --brand-navigation-bg: var(--color-primary-dk);
