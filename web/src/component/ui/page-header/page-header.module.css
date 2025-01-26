@@ -1,0 +1,16 @@
+:local(.logo) {
+  height: 80px;
+}
+
+:local(.page-header) {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:local(.page-header-title) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

@@ -1,20 +1,18 @@
 services:
   nginx:
     container_name: nginx
-    image: nginx:alpine-slim
+    build:
+      context: "."
+      dockerfile_inline: |
+        FROM nginx:alpine-slim
+        RUN rm -rf /usr/share/nginx/html/*
+        COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
     restart: always
     develop:
       watch:
         - action: sync+restart
           path: nginx/nginx.conf
           target: /etc/nginx/nginx.conf
-    depends_on:
-      - admin-api
-      - admin-web
-      - reader-api
-      - reader-web
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "80:80"
 
@@ -26,7 +24,7 @@ services:
         FROM node:22-alpine AS schema-build
         WORKDIR /build
         COPY . .
-        RUN npm install --global quicktype && node ./scripts/schema.js
+        RUN npm install --global quicktype && node ./scripts/schema.mjs
 
         FROM node:22-alpine AS js-build
         WORKDIR /build
@@ -36,14 +34,21 @@ services:
         FROM nginx:alpine
         RUN rm -rf /usr/share/nginx/html/*
         COPY --from=js-build /build/dist/admin /usr/share/nginx/html
+        COPY ./nginx/web.nginx.conf /etc/nginx/nginx.conf
     develop:
       watch:
         - action: rebuild
+          path: web/scripts
+          target: /build/web/scripts
+        - action: rebuild
           path: web/src
+          target: /build/web/src
         - action: rebuild
           path: web/resource
+          target: /build/web/resource
         - action: rebuild
           path: web/package.json
+          target: /build/web/package.json
 
   reader-web:
     container_name: reader-web
@@ -53,7 +58,7 @@ services:
         FROM node:22-alpine AS schema-build
         WORKDIR /build
         COPY . .
-        RUN npm install --global quicktype && node ./scripts/schema.js
+        RUN npm install --global quicktype && node ./scripts/schema.mjs
 
         FROM node:22-alpine AS js-build
         WORKDIR /build
@@ -63,14 +68,21 @@ services:
         FROM nginx:alpine
         RUN rm -rf /usr/share/nginx/html/*
         COPY --from=js-build /build/dist/reader /usr/share/nginx/html
+        COPY ./nginx/web.nginx.conf /etc/nginx/nginx.conf
     develop:
       watch:
         - action: rebuild
+          path: web/scripts
+          target: /build/web/scripts
+        - action: rebuild
           path: web/src
+          target: /build/web/src
         - action: rebuild
           path: web/resource
+          target: /build/web/resource
         - action: rebuild
           path: web/package.json
+          target: /build/web/package.json
 
   reader-api:
     container_name: reader-api
@@ -80,7 +92,7 @@ services:
         FROM node:22-alpine AS schema-build
         WORKDIR /build
         COPY . .
-        RUN npm install --global quicktype && node ./scripts/schema.js
+        RUN npm install --global quicktype && node ./scripts/schema.mjs
 
         FROM rust:1 AS rust-build
         WORKDIR /app
@@ -95,8 +107,10 @@ services:
       watch:
         - action: rebuild
           path: api/src
+          target: /app/src
         - action: rebuild
           path: api/Cargo.toml
+          target: /app/Cargo.toml
 
   admin-api:
     container_name: admin-api
@@ -106,7 +120,7 @@ services:
         FROM node:22-alpine AS schema-build
         WORKDIR /build
         COPY . .
-        RUN npm install --global quicktype && node ./scripts/schema.js
+        RUN npm install --global quicktype && node ./scripts/schema.mjs
 
         FROM rust:1 AS rust-build
         WORKDIR /app
@@ -121,7 +135,9 @@ services:
       watch:
         - action: rebuild
           path: api/src
+          target: /app/src
         - action: rebuild
           path: api/Cargo.toml
+          target: /app/Cargo.toml
     expose:
       - "8000"

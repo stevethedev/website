@@ -20,7 +20,7 @@ schema: setup
 	@node ./scripts/schema.mjs
 
 serve: setup schema install
-	docker-compose up --build --watch
+	docker-compose up --watch
 
 setup:
 	@git config core.hooksPath .githooks
