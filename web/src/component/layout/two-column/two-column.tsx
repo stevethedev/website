@@ -1,9 +1,19 @@
-import PageHeader from "@/component/ui/page-header/page-header";
+import BaseLayout from "@/component/layout/base";
+import PageHeader from "@/component/ui/page-header";
+import getClassName, { type ClassName } from "@/utils/class-name";
+import type { ReactElement } from "react";
+import styles from "./two-column.module.css";
 
-export default function TwoColumn() {
+export interface TwoColumnLayoutProps {
+  readonly className?: ClassName;
+}
+
+export default function TwoColumnLayout({
+  className,
+}: TwoColumnLayoutProps): ReactElement {
   return (
-    <section>
-      <PageHeader />
+    <BaseLayout className={getClassName(styles["two-column"], className)}>
+      <PageHeader className={styles["header"]} />
       <nav>page nav</nav>
       <section>
         <main>Page content</main>
@@ -13,6 +23,6 @@ export default function TwoColumn() {
         </aside>
       </section>
       <footer>Page footer</footer>
-    </section>
+    </BaseLayout>
   );
 }

@@ -1,0 +1,10 @@
+@import url("@/styles/core/variables.module.css");
+
+:local(.two-column) {
+  /* empty */
+}
+
+:local(.header) {
+  background-color: var(--brand-page-header);
+  padding: 1.5rem 2rem;
+}

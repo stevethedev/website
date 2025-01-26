@@ -20,7 +20,11 @@ schema: setup
 	@node ./scripts/schema.mjs
 
 serve: setup schema install
-	docker-compose up --watch
+	docker compose up --watch --build -d
+
+serve-rebuild:
+	docker compose rm -s -v $*
+	docker compose up -d --no-deps --build $*
 
 setup:
 	@git config core.hooksPath .githooks
@@ -29,3 +33,5 @@ setup:
 test: setup schema install
 	@cd web && npm test
 	@cd api && cargo test
+
+.PHONY: serve-rebuild

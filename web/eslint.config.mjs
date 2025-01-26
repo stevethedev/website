@@ -31,6 +31,14 @@ export default [
     },
   },
   { rules: { "react/react-in-jsx-scope": "off" } },
+  {
+    rules: {
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports" },
+      ],
+    },
+  },
   ...pluginStorybook.configs["flat/recommended"],
   eslintConfigPrettier,
 ];

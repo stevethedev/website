@@ -1,0 +1,42 @@
+/**
+ * Steve the Dev - Stickman Theme
+ * Variables File
+ */
+
+@import url("https://fonts.googleapis.com/css?family=Inconsolata|Nunito:400,400i,700,700i|Open+Sans:400,400i,700,700i");
+
+:root {
+  /* color palette */
+  --color-white: #fff;
+  --color-black: #000;
+  --color-primary-dk: #002a48;
+  --color-primary-md: #005695;
+  --color-primary-lt: #178ce1;
+  --color-compliment-dk: #482b00;
+  --color-compliment-lt: #955900;
+  --color-off-white: #f1f1f1;
+  --color-gray: #acacac;
+
+  /* branding */
+  --brand-accent: var(--color-primary-lt);
+  --brand-black: var(--color-black);
+  --brand-dark: var(--color-primary-dk);
+  --brand-text: var(--color-primary-dk);
+  --brand-light-text: var(--color-gray);
+  --brand-white: var(--color-white);
+  --brand-navigation: var(--color-primary-dk);
+  --brand-footer: var(--color-primary-dk);
+  --brand-page-header: var(--brand-white);
+  --background-color: var(--color-off-white);
+
+  /* screens */
+  --screen-sm: 576px;
+  --screen-md: 768px;
+  --screen-lg: 992px;
+  --screen-xl: 1200px;
+
+  /* fonts */
+  --font-header: "Nunito", sans-serif;
+  --font-body: "Open Sans", sans-serif;
+  --font-monospace: "Inconsolata", monospace;
+}

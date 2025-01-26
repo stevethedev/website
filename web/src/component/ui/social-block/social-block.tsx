@@ -1,7 +1,7 @@
-import { Link, type LinkProps } from "react-router";
-import IconSvg, { Icon } from "@/component/ui/icon-svg/icon-svg";
-import styles from "./social-block.module.css";
+import IconSvg, { type Icon } from "@/component/ui/icon-svg";
 import getClassName, { type ClassName } from "@/utils/class-name";
+import { Link, type LinkProps } from "react-router";
+import styles from "./social-block.module.css";
 
 export interface SocialBlockProperties {
   readonly className?: ClassName;

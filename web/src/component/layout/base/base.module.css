@@ -1,0 +1,15 @@
+@import url("@/styles/core/index.module.css");
+
+body {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+:local(.base) {
+  line-height: 1.8;
+}

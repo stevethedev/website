@@ -1,7 +1,6 @@
+import { Icon } from "@/component/ui/icon-svg";
 import type { Meta, StoryObj } from "@storybook/react";
-
 import SocialBlock from "./social-block";
-import { Icon } from "@/component/ui/icon-svg/icon-svg";
 
 const meta = {
   title: "UI/SocialBlock",

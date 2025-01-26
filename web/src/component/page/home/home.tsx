@@ -1,5 +1,5 @@
-import TwoColumn from "@/component/layout/two-column";
+import TwoColumnLayout from "@/component/layout/two-column";
 
-export default function Home() {
-  return <TwoColumn />;
+export default function HomePage() {
+  return <TwoColumnLayout />;
 }

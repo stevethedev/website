@@ -1,0 +1,76 @@
+/**
+ * Steve the Dev - Stickman Theme
+ * Basic Elements
+ */
+
+@import url("./variables.module.css");
+
+body {
+  background: var(--background-color);
+  color: var(--brand-text);
+  font-family: var(--font-body), sans-serif;
+}
+
+em {
+  font-style: italic;
+}
+
+footer {
+  margin-top: 1rem;
+}
+
+kbd {
+  font-family: var(--font-monospace), monospace;
+}
+
+ol,
+ul {
+  padding-left: 2rem;
+}
+
+ol {
+  list-style: decimal;
+}
+
+ol ol {
+  list-style: lower-roman;
+}
+
+ul {
+  list-style: disc;
+}
+
+ul ul {
+  list-style: square;
+}
+
+p {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+pre {
+  font-family: var(--font-monospace), monospace;
+}
+
+strong {
+  font-weight: bold;
+}
+
+sub,
+sup {
+  font-size: 0.8rem;
+}
+
+sub {
+  vertical-align: bottom;
+}
+
+sup {
+  vertical-align: top;
+}
+
+var {
+  font-family: serif;
+  font-style: italic;
+}

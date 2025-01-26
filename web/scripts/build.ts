@@ -1,10 +1,10 @@
+import { command, flag, number, option, run } from "cmd-ts";
+import { context, type Plugin } from "esbuild";
+import { createHash } from "node:crypto";
 import { copyFile, mkdir, readdir, readFile } from "node:fs/promises";
 import { basename, dirname, extname, join, resolve } from "node:path";
-import { fileURLToPath, URL } from "node:url";
 import * as process from "node:process";
-import { command, flag, number, option, run } from "cmd-ts";
-import { context, Plugin } from "esbuild";
-import { createHash } from "node:crypto";
+import { fileURLToPath, URL } from "node:url";
 
 run(
   command({
