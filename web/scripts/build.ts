@@ -1,7 +1,7 @@
 import { command, flag, number, option, run } from "cmd-ts";
 import { context, type Plugin } from "esbuild";
 import { createHash } from "node:crypto";
-import { copyFile, mkdir, readdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir, readdir, readFile, rm } from "node:fs/promises";
 import { basename, dirname, extname, join, resolve } from "node:path";
 import * as process from "node:process";
 import { fileURLToPath, URL } from "node:url";
@@ -28,7 +28,9 @@ run(
       const entryPoints = await getEntryPoints();
       const namedEntryPoints = getNamedEntryPoints(entryPoints);
       const copiedFiles = Object.keys(namedEntryPoints).map(async (appName) => {
-        await mkdir(getFilePath("dist", appName), { recursive: true });
+        const outPath = getFilePath("dist", appName);
+        await rm(outPath, { recursive: true, force: true });
+        await mkdir(outPath, { recursive: true });
         await copyFiles(getFilePath("resource"), getFilePath("dist", appName));
       });
       await Promise.all(copiedFiles);

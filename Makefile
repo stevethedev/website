@@ -22,8 +22,7 @@ schema: setup
 serve: setup schema install
 	docker compose up --watch --build -d
 
-serve-rebuild:
-	docker compose rm -s -v $*
+serve-rebuild\:%:
 	docker compose up -d --no-deps --build $*
 
 setup:

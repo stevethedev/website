@@ -1,4 +1,3 @@
-import { Icon } from "@/component/ui/icon-svg";
 import Logo from "@/component/ui/logo";
 import SocialBlock, { type LinkDefinition } from "@/component/ui/social-block";
 import getClassName, { type ClassName } from "@/utils/class-name";
@@ -8,26 +7,13 @@ import styles from "./page-header.module.css";
 
 export interface PageHeaderProps {
   readonly className?: ClassName;
+  readonly links: ReadonlyArray<LinkDefinition>;
 }
 
 export default function PageHeader({
   className,
+  links,
 }: PageHeaderProps): ReactElement {
-  const links: LinkDefinition[] = [
-    {
-      to: "https://www.linkedin.com/in/stevenmjimenez",
-      target: "_blank",
-      rel: "noreferrer",
-      icon: Icon.LinkedIn,
-    },
-    {
-      to: "https://github.com/stevethedev",
-      target: "_blank",
-      rel: "noreferrer",
-      icon: Icon.Github,
-    },
-  ];
-
   return (
     <header className={getClassName(styles["page-header"], className)}>
       <section className={styles["page-header-title"]}>

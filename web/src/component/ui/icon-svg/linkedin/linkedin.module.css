@@ -1,0 +1,5 @@
+:local(.linkedin) {
+  color: var(--color-white);
+  background-color: rgb(0 126 187);
+  padding: 0;
+}

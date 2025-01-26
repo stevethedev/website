@@ -7,6 +7,6 @@
   transition: transform 0.1s ease;
 
   &:hover {
-    transform: perspective(1px) translateY(-5%) scale(1.1);
+    transform: translateY(-2.5%) scale(1.1);
   }
 }

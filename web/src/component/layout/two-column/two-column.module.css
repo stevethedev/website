@@ -8,3 +8,8 @@
   background-color: var(--brand-page-header);
   padding: 1.5rem 2rem;
 }
+
+:local(.nav) {
+  padding: 0 1rem;
+  box-shadow: 0.05rem 0.05rem 0.2rem 0.05rem var(--color-shadow);
+}

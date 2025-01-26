@@ -5,7 +5,7 @@ import styles from "./social-block.module.css";
 
 export interface SocialBlockProperties {
   readonly className?: ClassName;
-  readonly links: LinkDefinition[];
+  readonly links: ReadonlyArray<LinkDefinition>;
 }
 
 export interface LinkDefinition extends LinkProps {
@@ -18,11 +18,15 @@ export default function SocialBlock({
 }: SocialBlockProperties) {
   return (
     <section className={getClassName(styles["social-block"], className)}>
-      {links.map(({ to, target, rel, icon }) => (
-        <Link key={JSON.stringify(to)} to={to} target={target} rel={rel}>
-          <IconSvg className={styles["social-block-link"]} icon={icon} />
-        </Link>
-      ))}
+      {links?.map(({ to, target, rel, icon }) => {
+        const Icon = IconSvg[icon];
+
+        return (
+          <Link key={JSON.stringify(to)} to={to} target={target} rel={rel}>
+            <Icon className={styles["social-block-link"]} />
+          </Link>
+        );
+      })}
     </section>
   );
 }

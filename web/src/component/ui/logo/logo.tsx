@@ -12,7 +12,6 @@ export default function Logo({
   className,
   alt = "Steve the Dev",
 }: LogoProps): ReactElement {
-  console.log(css);
   return (
     <img alt={alt} src={logo} className={getClassName(css.logo, className)} />
   );

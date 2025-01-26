@@ -7,15 +7,16 @@
 
 :root {
   /* color palette */
-  --color-white: #fff;
-  --color-black: #000;
-  --color-primary-dk: #002a48;
-  --color-primary-md: #005695;
-  --color-primary-lt: #178ce1;
-  --color-compliment-dk: #482b00;
-  --color-compliment-lt: #955900;
-  --color-off-white: #f1f1f1;
-  --color-gray: #acacac;
+  --color-white: rgb(255 255 255);
+  --color-black: rgb(0 0 0);
+  --color-primary-dk: rgb(0 42 72);
+  --color-primary-md: rgb(0 86 149);
+  --color-primary-lt: rgb(23 140 225);
+  --color-compliment-dk: rgb(72 43 0);
+  --color-compliment-lt: rgb(149 89 0);
+  --color-off-white: rgb(241 241 241);
+  --color-gray: rgb(172 172 172);
+  --color-shadow: rgb(0 42 72 / 20%);
 
   /* branding */
   --brand-accent: var(--color-primary-lt);
@@ -24,10 +25,13 @@
   --brand-text: var(--color-primary-dk);
   --brand-light-text: var(--color-gray);
   --brand-white: var(--color-white);
-  --brand-navigation: var(--color-primary-dk);
   --brand-footer: var(--color-primary-dk);
   --brand-page-header: var(--brand-white);
   --background-color: var(--color-off-white);
+  --brand-navigation-bg: var(--color-primary-dk);
+  --brand-navigation-fg: var(--brand-white);
+  --brand-navigation-bg-active: var(--brand-white);
+  --brand-navigation-fg-active: var(--color-primary-dk);
 
   /* screens */
   --screen-sm: 576px;
