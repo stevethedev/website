@@ -1,0 +1,6 @@
+:local(.footer) {
+  background-color: var(--brand-footer-bg);
+  color: var(--brand-footer-fg);
+  font-style: italic;
+  font-size: 0.65rem;
+}

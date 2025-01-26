@@ -1,10 +1,10 @@
-import { copyFile, mkdir, readdir } from "node:fs/promises";
-import { join, basename, extname, resolve, dirname } from "node:path";
-import { URL, fileURLToPath } from "node:url";
-import * as process from "node:process";
-import { command, run, flag, number, option } from "cmd-ts";
-import { context, Plugin } from "esbuild";
+import { command, flag, number, option, run } from "cmd-ts";
+import { context, type Plugin } from "esbuild";
 import { createHash } from "node:crypto";
+import { copyFile, mkdir, readdir, readFile, rm } from "node:fs/promises";
+import { basename, dirname, extname, join, resolve } from "node:path";
+import * as process from "node:process";
+import { fileURLToPath, URL } from "node:url";
 
 run(
   command({
@@ -28,7 +28,9 @@ run(
       const entryPoints = await getEntryPoints();
       const namedEntryPoints = getNamedEntryPoints(entryPoints);
       const copiedFiles = Object.keys(namedEntryPoints).map(async (appName) => {
-        await mkdir(getFilePath("dist", appName), { recursive: true });
+        const outPath = getFilePath("dist", appName);
+        await rm(outPath, { recursive: true, force: true });
+        await mkdir(outPath, { recursive: true });
         await copyFiles(getFilePath("resource"), getFilePath("dist", appName));
       });
       await Promise.all(copiedFiles);
@@ -133,7 +135,6 @@ function getFilePath(...fp: string[]): string {
 }
 
 function svgCopy(): Plugin {
-  const hasher = createHash("sha1");
   return {
     name: "copy-svg",
     setup: (build) => {
@@ -141,10 +142,19 @@ function svgCopy(): Plugin {
 
       const files: Record<string, string> = {};
 
-      build.onResolve({ filter: /\.svg$/, namespace: "file" }, (args) => {
-        const hash = hasher.update(args.resolveDir).digest("hex").slice(0, 8);
+      build.onResolve({ filter: /\.svg$/, namespace: "file" }, async (args) => {
+        // Load the file's contents:
+        const contents = await readFile(join(args.resolveDir, args.path));
+
+        const hash = createHash("sha1")
+          .update(contents)
+          .update(args.resolveDir)
+          .update(args.path)
+          .digest("hex")
+          .slice(0, 8);
+
         const filename = `${basename(args.path, extname(args.path))}.${hash}.svg`;
-        const filepath = `./${join(dirname(args.path), "resources", filename).replace(/\\/g, "/")}`;
+        const filepath = `./${join("resources", filename).replace(/\\/g, "/")}`;
 
         files[filepath] = resolve(args.resolveDir, args.path);
 
@@ -161,8 +171,13 @@ function svgCopy(): Plugin {
         };
       });
 
-      build.onEnd(async (result) => {
-        const outputs = result.metafile!.outputs;
+      build.onEnd(async ({ metafile }) => {
+        if (!metafile) {
+          console.error("Could not create metafile to copy SVG files");
+          return;
+        }
+
+        const outputs = metafile.outputs;
 
         for (const [output, { inputs }] of Object.entries(outputs)) {
           const imports = Object.keys(inputs)

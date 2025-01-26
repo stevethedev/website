@@ -1,0 +1,12 @@
+:local(.social-block) {
+  display: flex;
+  gap: 0.25em;
+}
+
+:local(.social-block-link) {
+  transition: transform var(--timing-instant) ease;
+
+  &:hover {
+    transform: translateY(-2.5%) scale(1.1);
+  }
+}

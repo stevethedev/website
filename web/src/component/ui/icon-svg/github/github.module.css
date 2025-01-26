@@ -1,0 +1,5 @@
+:local(.github) {
+  color: var(--color-white);
+  background-color: rgb(36 41 45 / 100%);
+  padding: 10%;
+}

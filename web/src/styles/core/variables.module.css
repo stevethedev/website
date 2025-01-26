@@ -1,0 +1,55 @@
+/**
+ * Steve the Dev - Stickman Theme
+ * Variables File
+ */
+
+@import url("https://fonts.googleapis.com/css?family=Inconsolata|Nunito:400,400i,700,700i|Open+Sans:400,400i,700,700i");
+
+:root {
+  /* color palette */
+  --color-white: rgb(255 255 255);
+  --color-black: rgb(0 0 0);
+  --color-primary-dk: rgb(0 42 72);
+  --color-primary-md: rgb(0 86 149);
+  --color-primary-lt: rgb(23 140 225);
+  --color-compliment-dk: rgb(72 43 0);
+  --color-compliment-lt: rgb(149 89 0);
+  --color-off-white: rgb(241 241 241);
+  --color-gray: rgb(172 172 172);
+  --color-shadow: rgb(0 42 72 / 20%);
+
+  /* branding */
+  --brand-accent: var(--color-primary-lt);
+  --brand-black: var(--color-black);
+  --brand-dark: var(--color-primary-dk);
+  --brand-text: var(--color-primary-dk);
+  --brand-light-text: var(--color-gray);
+  --brand-white: var(--color-white);
+  --brand-footer-bg: var(--color-primary-dk);
+  --brand-footer-fg: var(--color-gray);
+  --brand-page-header: var(--brand-white);
+  --background-color: var(--color-off-white);
+  --brand-navigation-bg: var(--color-primary-dk);
+  --brand-navigation-fg: var(--brand-white);
+  --brand-navigation-bg-active: var(--brand-white);
+  --brand-navigation-fg-active: var(--color-primary-dk);
+
+  /* screens */
+  --screen-sm: 576px;
+  --screen-md: 768px;
+  --screen-lg: 992px;
+  --screen-xl: 1200px;
+
+  /* fonts */
+  --font-header: "Nunito", sans-serif;
+  --font-body: "Open Sans", sans-serif;
+  --font-monospace: "Inconsolata", monospace;
+
+  /* timing */
+  --timing-instant: 0.1s;
+  --timing-fast: 0.2s;
+  --timing-normal: 0.3s;
+  --timing-slow: 0.5s;
+  --timing-slower: 0.7s;
+  --timing-slowest: 1s;
+}

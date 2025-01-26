@@ -1,0 +1,9 @@
+:local(.article) {
+  background-color: var(--brand-white);
+  color: var(--brand-text);
+  padding: 1rem;
+  transition:
+    box-shadow var(--timing-normal),
+    transform var(--timing-normal);
+  box-shadow: 0.05rem 0.05rem 0.2rem 0.05rem var(--color-shadow);
+}

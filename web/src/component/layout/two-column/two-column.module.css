@@ -1,0 +1,36 @@
+@import url("@/styles/core/variables.module.css");
+
+:local(.two-column) {
+  /* empty */
+}
+
+:local(.header) {
+  background-color: var(--brand-page-header);
+  padding: 1.5rem 2rem;
+}
+
+:local(.nav) {
+  padding: 0 1rem;
+  box-shadow: 0.05rem 0.05rem 0.2rem 0.05rem var(--color-shadow);
+}
+
+:local(.viewport) {
+  display: grid;
+  grid-template-columns: auto 20rem;
+  gap: 1rem;
+  padding: 1rem;
+  flex: 1;
+}
+
+:local(.column) {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+:local(.footer) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}

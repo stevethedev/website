@@ -1,4 +1,7 @@
 import type { Preview } from "@storybook/react";
+import { BrowserRouter } from "react-router";
+
+import "@/styles/core/index.module.css";
 
 export default {
   parameters: {
@@ -9,4 +12,7 @@ export default {
       },
     },
   },
+  applyDecorators: (storyFn) => (storyContext) => (
+    <BrowserRouter>{storyFn(storyContext)}</BrowserRouter>
+  ),
 } satisfies Preview;

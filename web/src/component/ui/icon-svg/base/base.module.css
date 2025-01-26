@@ -1,0 +1,10 @@
+:local(.base) {
+  --icon-size: 2rem;
+
+  display: flex;
+  height: var(--icon-size);
+  width: var(--icon-size);
+  box-sizing: border-box;
+  overflow: visible;
+  border-radius: 10%;
+}
