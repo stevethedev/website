@@ -6,3 +6,7 @@ updates:
     directory: /web/
     schedule:
       interval: daily
+    open-pull-requests-limit: 50
+    groups:
+      dev-dependencies:
+        dependency-type: development
