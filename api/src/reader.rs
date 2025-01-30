@@ -1,5 +1,6 @@
 use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 
+mod client;
 mod schema;
 
 #[get("/")]
