@@ -1,5 +1,30 @@
+//! This module defines the core traits and implementations for a command pattern in Rust.
+//! It includes the `Command` trait for defining commands with associated input and output types,
+//! and the `Client` trait for dispatching these commands to a backend.
+
+/// A type alias for a `Result` with a boxed dynamic error.
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
+/// The `Command` trait represents an asynchronous command that can be executed with a given backend.
+///
+/// # Associated Types
+/// - `Backend`: The type of the backend that the command operates on.
+/// - `Output`: The type of the result produced by the command.
+///
+/// # Example
+/// ```
+/// struct MyCommand;
+///
+/// #[async_trait::async_trait]
+/// impl Command for MyCommand {
+///     type Backend = MyBackend;
+///     type Output = MyOutput;
+///
+///     async fn execute(&self, backend: Self::Backend) -> Result<Self::Output> {
+///         // Command execution logic
+///     }
+/// }
+/// ```
 #[async_trait::async_trait]
 pub trait Command: Send + Sync {
     type Backend: Send + Sync;
@@ -8,6 +33,24 @@ pub trait Command: Send + Sync {
     async fn execute(&self, backend: Self::Backend) -> Result<Self::Output>;
 }
 
+/// The `Client` trait represents a client that can dispatch commands to a backend.
+///
+/// # Associated Types
+/// - `TBackend`: The type of the backend that the client operates on.
+///
+/// # Example
+/// ```
+/// struct MyClient {
+///     backend: MyBackend,
+/// }
+///
+/// #[async_trait::async_trait]
+/// impl Client<MyBackend> for MyClient {
+///     fn backend(&self) -> MyBackend {
+///         self.backend.clone()
+///     }
+/// }
+/// ```
 #[async_trait::async_trait]
 pub trait Client<TBackend: Send + Sync>: Send + Sync {
     fn backend(&self) -> TBackend;
@@ -25,6 +68,7 @@ mod tests {
     use super::*;
     use std::sync::{Arc, RwLock};
 
+    /// Tests the `FilterPage` command with a memory backend.
     #[tokio::test]
     async fn test_filter_page() {
         #[derive(Clone, PartialEq)]
@@ -112,6 +156,7 @@ mod tests {
         assert_eq!(pages[0].body, "Body 1");
     }
 
+    /// Tests the `FilterPage` command with a different backend type.
     #[tokio::test]
     async fn test_other_backend() {
         #[derive(Default)]
