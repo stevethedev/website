@@ -57,7 +57,7 @@ pub trait Command: Send + Sync {
     type Backend: Send + Sync;
     type Output;
 
-    async fn execute(&self, backend: Self::Backend) -> Result<Self::Output>;
+    async fn execute(self, backend: Self::Backend) -> Result<Self::Output>;
 }
 
 /// The `Client` trait represents a client that can dispatch commands to a backend.
@@ -129,7 +129,7 @@ mod tests {
             type Backend = Arc<RwLock<Vec<Record>>>;
             type Output = Vec<Record>;
 
-            async fn execute(&self, backend: Self::Backend) -> Result<Self::Output> {
+            async fn execute(self, backend: Self::Backend) -> Result<Self::Output> {
                 let backend = backend.read()?;
                 let pages: Vec<Record> = backend
                     .iter()
@@ -209,7 +209,7 @@ mod tests {
             type Backend = ();
             type Output = String;
 
-            async fn execute(&self, _: Self::Backend) -> Result<Self::Output> {
+            async fn execute(self, _: Self::Backend) -> Result<Self::Output> {
                 let mut writer = vec![];
 
                 if let Some(id) = &self.id {

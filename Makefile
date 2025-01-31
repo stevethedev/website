@@ -30,7 +30,7 @@ restart\:%:
 
 setup:
 	@git config core.hooksPath .githooks
-	@npm install --no-save quicktype prettier
+	@npm install --no-save quicktype-core prettier ts-morph
 
 test: setup schema install
 	@cd web && npm test

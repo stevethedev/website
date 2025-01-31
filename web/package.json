@@ -9,7 +9,8 @@
     "email": "stevenmjimenez@gmail.com"
   },
   "scripts": {
-    "build": "tsx scripts/build.ts",
+    "build": "npm-run-all check:types build:code",
+    "build:code": "tsx scripts/build.ts",
     "build:serve": "npm run build -- --serve",
     "check": "npm-run-all check:*",
     "check:dependencies": "depcheck",

@@ -1,4 +1,4 @@
-import PageClient, { GetPage } from "@/client/page";
+import PageClient, { GetPages } from "@/client/page";
 import BaseLayout from "@/component/layout/base";
 import Article from "@/component/ui/article";
 import Footer from "@/component/ui/footer";
@@ -23,13 +23,16 @@ export default function TwoColumnLayout({
   const [page, setPage] = useState<Page | null>(null);
   useEffect(() => {
     const pageClient = new PageClient({ baseUrl: "http://localhost/api" });
-    const getPageCommand = new GetPage({ id: "1" });
-    console.log("Loading page!");
+    const getPageCommand = new GetPages({
+      filter: {
+        path: "/", // This is the home page
+      },
+    });
     void pageClient
       .send(getPageCommand)
       .then((getPageOutput) => getPageOutput.payload())
-      .then(setPage)
-      .then(() => console.log("Page loaded"));
+      .then(([page = null]) => page)
+      .then(setPage);
   }, [setPage]);
 
   const links: LinkDefinition[] = [
@@ -70,7 +73,7 @@ export default function TwoColumnLayout({
         <main className={styles.column}>
           <Article>
             {page?.title}
-            {page?.body}
+            {page?.content}
           </Article>
         </main>
         <aside className={styles.column}>

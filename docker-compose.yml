@@ -29,7 +29,9 @@ services:
         FROM node:22-alpine AS schema-build
         WORKDIR /build
         COPY . .
-        RUN npm install --global quicktype && node ./scripts/schema.mjs
+        RUN npm init --force
+        RUN npm install --save-dev quicktype-core ts-morph
+        RUN node ./scripts/schema.mjs
 
         FROM node:22-alpine AS js-build
         WORKDIR /build
@@ -63,7 +65,9 @@ services:
         FROM node:22-alpine AS schema-build
         WORKDIR /build
         COPY . .
-        RUN npm install --global quicktype && node ./scripts/schema.mjs
+        RUN npm init --force
+        RUN npm install --save-dev quicktype-core ts-morph
+        RUN node ./scripts/schema.mjs
 
         FROM node:22-alpine AS js-build
         WORKDIR /build
@@ -97,7 +101,9 @@ services:
         FROM node:22-alpine AS schema-build
         WORKDIR /build
         COPY . .
-        RUN npm install --global quicktype && node ./scripts/schema.mjs
+        RUN npm init --force
+        RUN npm install --save-dev quicktype-core ts-morph
+        RUN node ./scripts/schema.mjs
 
         FROM rust:1 AS rust-build
         WORKDIR /app
@@ -127,7 +133,9 @@ services:
         FROM node:22-alpine AS schema-build
         WORKDIR /build
         COPY . .
-        RUN npm install --global quicktype && node ./scripts/schema.mjs
+        RUN npm init --force
+        RUN npm install --save-dev quicktype-core ts-morph
+        RUN node ./scripts/schema.mjs
 
         FROM rust:1 AS rust-build
         WORKDIR /app

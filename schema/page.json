@@ -7,13 +7,17 @@
       "type": "object",
       "description": "A renderable page",
       "additionalProperties": false,
-      "required": ["title", "body"],
+      "required": ["title", "path", "content"],
       "properties": {
         "title": {
           "type": "string",
           "description": "The title of the page"
         },
-        "body": {
+        "path": {
+          "type": "string",
+          "description": "The URL path that will be used to access the page, beginning with the leading slash"
+        },
+        "content": {
           "type": "string",
           "description": "The message to return"
         }

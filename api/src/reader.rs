@@ -17,7 +17,8 @@ async fn main() -> std::io::Result<()> {
     let pages_db = Data::new(RwLock::new(vec![Page {
         id: 1,
         title: "Hello, world!".to_string(),
-        body: "Hello, body!".to_string(),
+        path: "/".to_string(),
+        content: "Hello, body!".to_string(),
     }]));
     HttpServer::new(move || {
         App::new()
