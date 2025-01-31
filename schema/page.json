@@ -1,0 +1,23 @@
+{
+  "$id": "page.json",
+  "$ref": "#/definitions/Page",
+  "title": "Page",
+  "definitions": {
+    "Page": {
+      "type": "object",
+      "description": "A renderable page",
+      "additionalProperties": false,
+      "required": ["title", "body"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the page"
+        },
+        "body": {
+          "type": "string",
+          "description": "The message to return"
+        }
+      }
+    }
+  }
+}
