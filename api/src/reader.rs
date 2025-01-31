@@ -1,19 +1,35 @@
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use crate::client::page::Page;
+use actix_web::{
+    middleware::Logger,
+    web::{scope, Data},
+    App, HttpServer,
+};
+use std::sync::RwLock;
 
 mod client;
+mod route;
 mod schema;
-
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().json(schema::hello_world::HelloWorld {
-        message: "Hello, reader!".to_string(),
-    })
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(hello))
-        .bind(("0.0.0.0", 8000))?
-        .run()
-        .await
+    env_logger::init();
+
+    let pages_db = Data::new(RwLock::new(vec![Page {
+        id: 1,
+        title: "Hello, world!".to_string(),
+        body: "Hello, body!".to_string(),
+    }]));
+    HttpServer::new(move || {
+        App::new()
+            .wrap(Logger::default())
+            .app_data(pages_db.clone())
+            .service(
+                scope("/pages")
+                    .service(route::page::list_pages)
+                    .service(route::page::get_page),
+            )
+    })
+    .bind(("0.0.0.0", 8000))?
+    .run()
+    .await
 }

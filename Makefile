@@ -25,6 +25,9 @@ serve: setup schema install
 rebuild\:%:
 	docker compose up -d --no-deps --build $*
 
+restart\:%:
+	docker compose restart $*
+
 setup:
 	@git config core.hooksPath .githooks
 	@npm install --no-save quicktype prettier

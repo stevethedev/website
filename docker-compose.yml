@@ -15,6 +15,11 @@ services:
           target: /etc/nginx/nginx.conf
     ports:
       - "80:80"
+    depends_on:
+      - admin-api
+      - reader-api
+      - admin-web
+      - reader-web
 
   admin-web:
     container_name: admin-web
@@ -111,6 +116,8 @@ services:
         - action: rebuild
           path: api/Cargo.toml
           target: /app/Cargo.toml
+    environment:
+      RUST_LOG: "info"
 
   admin-api:
     container_name: admin-api

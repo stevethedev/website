@@ -2,8 +2,34 @@
 //! It includes the `Command` trait for defining commands with associated input and output types,
 //! and the `Client` trait for dispatching these commands to a backend.
 
+pub mod page;
+
 /// A type alias for a `Result` with a boxed dynamic error.
-pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+pub type Result<T> = std::result::Result<T, Error>;
+
+#[derive(Debug)]
+pub enum Error {
+    GenericError(String),
+}
+
+impl std::error::Error for Error {}
+impl std::fmt::Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::GenericError(message) => format!("GenericError: {}", message),
+            }
+        )
+    }
+}
+
+impl<T> From<std::sync::PoisonError<T>> for Error {
+    fn from(value: std::sync::PoisonError<T>) -> Self {
+        Self::GenericError(value.to_string())
+    }
+}
 
 /// The `Command` trait represents an asynchronous command that can be executed with a given backend.
 ///
@@ -27,6 +53,7 @@ pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 /// ```
 #[async_trait::async_trait]
 pub trait Command: Send + Sync {
+    type Client: Client<Self::Backend>;
     type Backend: Send + Sync;
     type Output;
 
@@ -55,7 +82,7 @@ pub trait Command: Send + Sync {
 pub trait Client<TBackend: Send + Sync>: Send + Sync {
     fn backend(&self) -> TBackend;
 
-    async fn send<TCommand: Command<Backend = TBackend>>(
+    async fn send<TCommand: Command<Backend = TBackend, Client = Self>>(
         &self,
         command: TCommand,
     ) -> Result<TCommand::Output> {
@@ -98,11 +125,12 @@ mod tests {
 
         #[async_trait::async_trait]
         impl Command for FilterPage {
+            type Client = MemoryClient;
             type Backend = Arc<RwLock<Vec<Record>>>;
             type Output = Vec<Record>;
 
             async fn execute(&self, backend: Self::Backend) -> Result<Self::Output> {
-                let backend = backend.read().unwrap();
+                let backend = backend.read()?;
                 let pages: Vec<Record> = backend
                     .iter()
                     .filter(|record| {
@@ -177,6 +205,7 @@ mod tests {
 
         #[async_trait::async_trait]
         impl Command for FilterPage {
+            type Client = MemoryClient;
             type Backend = ();
             type Output = String;
 
