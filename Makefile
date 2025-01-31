@@ -20,9 +20,9 @@ schema: setup
 	@node ./scripts/schema.mjs
 
 serve: setup schema install
-	docker compose up --watch --build -d
+	docker compose up --watch --build
 
-serve-rebuild\:%:
+rebuild\:%:
 	docker compose up -d --no-deps --build $*
 
 setup:
