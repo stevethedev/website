@@ -3,7 +3,9 @@ import { describe, expect, it, jest } from "@jest/globals";
 import type { GetPagesCommandInput } from "./command/get-pages";
 import { GetPages } from "./command/get-pages";
 
-describe("GetPages", () => {
+describe("Client", () => {
+  const config = { baseUrl: "http://localhost/api" };
+
   it("should construct with filter", () => {
     const input: GetPagesCommandInput = { filter: { title: "test" } };
     const getPages = new GetPages(input);
@@ -11,7 +13,7 @@ describe("GetPages", () => {
   });
 
   it("should fetch pages with correct query parameters", async () => {
-    const input: GetPagesCommandInput = { filter: { title: "test" } };
+    const input: GetPagesCommandInput = { filter: { path: "/test" } };
     const getPages = new GetPages(input);
 
     global.fetch = jest.fn(() =>
@@ -20,8 +22,10 @@ describe("GetPages", () => {
       } as Response),
     );
 
-    const result = await getPages.execute();
-    expect(global.fetch).toHaveBeenCalledWith("/api/pages/?title=test");
+    const result = await getPages.execute(config);
+    expect(global.fetch).toHaveBeenCalledWith(
+      "http://localhost/api/pages/?path=%2Ftest&limit=10",
+    );
     expect(result.payload).toBeDefined();
   });
 
@@ -38,7 +42,7 @@ describe("GetPages", () => {
       } as Response),
     );
 
-    const result = await getPages.execute();
+    const result = await getPages.execute(config);
     const pages = await result.payload();
     expect(pages).toEqual(mockPages);
   });

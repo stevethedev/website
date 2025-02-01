@@ -23,7 +23,7 @@ impl From<Arc<RwLock<Vec<Page>>>> for PageClient<Arc<RwLock<Vec<Page>>>> {
 
 #[derive(Clone)]
 pub struct Page {
-    pub id: u32,
+    pub id: u64,
     pub path: String,
     pub title: String,
     pub content: String,
@@ -41,15 +41,22 @@ impl Into<crate::schema::page::Page> for Page {
 
 #[derive(Clone, Default)]
 pub struct Fields {
-    pub id: Option<u32>,
+    pub id: Option<u64>,
     pub title: Option<String>,
     pub path: Option<String>,
     pub content: Option<String>,
 }
 
 #[derive(Clone, Default)]
+pub struct Pagination {
+    pub limit: Option<u64>,
+    pub offset: Option<u64>,
+}
+
+#[derive(Clone, Default)]
 pub struct FilterPage {
     pub fields: Fields,
+    pub pagination: Option<Pagination>,
 }
 
 impl FilterPage {
@@ -69,7 +76,7 @@ impl FilterPage {
     /// let filter = FilterPage::default().field_id(42);
     /// # assert_eq!(filter.fields.id, Some(42));
     /// ```
-    pub fn field_id(mut self, id: impl Into<Option<u32>>) -> Self {
+    pub fn field_id(mut self, id: impl Into<Option<u64>>) -> Self {
         self.fields.id = id.into();
         self
     }
@@ -136,6 +143,56 @@ impl FilterPage {
         self.fields.content = content.into();
         self
     }
+
+    /// Sets the limit field.
+    ///
+    /// # Parameters
+    ///
+    /// - `limit` - The maximum number of results to return.
+    ///
+    /// # Returns
+    ///
+    /// The updated `FilterPage` object.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let filter = FilterPage::default().limit(10);
+    /// # assert_eq!(filter.pagination.map(|p| p.limit), Some(10));
+    /// ```
+    pub fn limit(mut self, limit: impl Into<Option<u64>>) -> Self {
+        let limit = limit.into();
+        self.pagination = Some(Pagination {
+            limit,
+            offset: self.pagination.map(|p| p.offset).unwrap_or_default(),
+        });
+        self
+    }
+
+    /// Sets the offset field.
+    ///
+    /// # Parameters
+    ///
+    /// - `offset` - The number of results to skip.
+    ///
+    /// # Returns
+    ///
+    /// The updated `FilterPage` object.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let filter = FilterPage::default().offset(10);
+    /// # assert_eq!(filter.pagination.map(|p| p.offset), Some(10));
+    /// ```
+    pub fn offset(mut self, offset: impl Into<Option<u64>>) -> Self {
+        let offset = offset.into();
+        self.pagination = Some(Pagination {
+            limit: self.pagination.map(|p| p.limit).unwrap_or_default(),
+            offset,
+        });
+        self
+    }
 }
 
 #[async_trait::async_trait]
@@ -148,6 +205,13 @@ impl super::Command for FilterPage {
         backend.read().map_err(super::Error::from).map(|backend| {
             backend
                 .iter()
+                .skip(
+                    self.pagination
+                        .as_ref()
+                        .and_then(|p| p.offset)
+                        .unwrap_or_default() as usize,
+                )
+                .take(self.pagination.and_then(|p| p.limit).unwrap_or(u64::MAX) as usize)
                 .filter(|&page| self.fields.id.is_none() || self.fields.id == Some(page.id))
                 .filter(|&page| {
                     self.fields.path.is_none() || self.fields.path.as_ref() == Some(&page.path)
@@ -180,7 +244,7 @@ impl super::Command for CreatePage {
 
     async fn execute(self, backend: Self::Backend) -> super::Result<Self::Output> {
         let mut backend = backend.write().map_err(super::Error::from)?;
-        let id = backend.len() as u32 + 1;
+        let id = backend.len() as u64 + 1;
         let page = Page {
             id,
             title: self.title,

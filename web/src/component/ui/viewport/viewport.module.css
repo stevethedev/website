@@ -1,0 +1,11 @@
+@import url("@/styles/core/variables.module.css");
+
+:local(.viewport) {
+  --viewport-columns: auto;
+
+  display: grid;
+  grid-template-columns: var(--viewport-columns, auto);
+  gap: 1rem;
+  padding: 1rem;
+  flex: 1;
+}

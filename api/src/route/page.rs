@@ -15,6 +15,8 @@ use std::sync::RwLock;
 #[derive(serde::Deserialize)]
 struct FilterQuery {
     path: Option<String>,
+    offset: Option<u64>,
+    limit: Option<u64>,
 }
 
 #[get("/")]
@@ -24,7 +26,10 @@ async fn list_pages(
 ) -> impl Responder {
     let filter_query = filter_query.into_inner();
     let client = PageClient::from(pages_db.into_inner());
-    let command = FilterPage::default().field_path(filter_query.path);
+    let command = FilterPage::default()
+        .field_path(filter_query.path)
+        .offset(filter_query.offset)
+        .limit(filter_query.limit);
     match client.send(command).await {
         Ok(pages) => HttpResponse::Ok().json(
             pages
@@ -37,17 +42,10 @@ async fn list_pages(
 }
 
 #[get("/{id}/")]
-async fn get_page(pages_db: Data<RwLock<Vec<Page>>>, id: Path<u32>) -> impl Responder {
+async fn get_page(pages_db: Data<RwLock<Vec<Page>>>, id: Path<u64>) -> impl Responder {
     let id = id.into_inner();
     let client = PageClient::from(pages_db.into_inner());
-    let command = FilterPage {
-        fields: crate::client::page::Fields {
-            id: Some(id),
-            path: None,
-            content: None,
-            title: None,
-        },
-    };
+    let command = FilterPage::default().field_id(id).limit(1);
     match client.send(command).await {
         Ok(pages) => match pages.into_iter().next() {
             Some(page) => HttpResponse::Ok().json(Into::<PageJson>::into(page)),

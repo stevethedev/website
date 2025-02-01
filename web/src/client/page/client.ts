@@ -1,4 +1,9 @@
 import { Client } from "@/client";
-import type { PageClientConfig } from "./config";
+import { type PageClientConfig, PageClientConfigReader } from "./config";
 
-export default class PageClient extends Client<PageClientConfig> {}
+export default class PageClient extends Client<PageClientConfig> {
+  constructor(config: PageClientConfig) {
+    const reader = new PageClientConfigReader(config);
+    super(reader.read());
+  }
+}

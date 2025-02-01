@@ -7,7 +7,7 @@ export default function Reader(): ReactNode {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<HomePage />} />
+        <Route index element={<HomePage apiUrl="http://localhost/api" />} />
         <Route path="logo" element={<Logo />} />
       </Routes>
     </BrowserRouter>

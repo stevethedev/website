@@ -1,7 +1,9 @@
 @import url("@/styles/core/variables.module.css");
 
 :local(.two-column) {
-  /* empty */
+  :local(.viewport) {
+    grid-template-columns: auto 20rem;
+  }
 }
 
 :local(.header) {
@@ -12,14 +14,6 @@
 :local(.nav) {
   padding: 0 1rem;
   box-shadow: 0.05rem 0.05rem 0.2rem 0.05rem var(--color-shadow);
-}
-
-:local(.viewport) {
-  display: grid;
-  grid-template-columns: auto 20rem;
-  gap: 1rem;
-  padding: 1rem;
-  flex: 1;
 }
 
 :local(.column) {

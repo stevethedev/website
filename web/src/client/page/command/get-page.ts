@@ -14,14 +14,18 @@ export interface GetPageCommandOutput {
 export class GetPage
   implements Command<PageClientConfig, GetPageCommandOutput>
 {
-  readonly #id: string;
+  readonly #targetPath: string;
 
   constructor(getPageCommandInput: GetPageCommandInput) {
-    this.#id = getPageCommandInput.id;
+    this.#targetPath = `pages/${getPageCommandInput.id}/`;
   }
 
-  async execute(config: Readonly<PageClientConfig>) {
-    const response = await fetch(`${config.baseUrl}/pages/${this.#id}/`);
+  async execute(config: Readonly<Required<PageClientConfig>>) {
+    const baseUrl = config.baseUrl.endsWith("/")
+      ? config.baseUrl
+      : `${config.baseUrl}/`;
+    const url = new URL(this.#targetPath, baseUrl);
+    const response = await fetch(url.toString());
 
     const payload = async () => await response.text().then(Convert.toPage);
 

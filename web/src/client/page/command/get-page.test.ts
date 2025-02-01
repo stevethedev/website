@@ -7,7 +7,9 @@ import fetchMock from "jest-fetch-mock";
 fetchMock.enableMocks();
 
 describe("GetPage", () => {
-  const config: PageClientConfig = { baseUrl: "http://localhost/api" };
+  const config: Required<PageClientConfig> = {
+    baseUrl: "http://localhost/api",
+  };
 
   const page: Page = {
     path: "/test",
