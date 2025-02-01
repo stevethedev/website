@@ -95,6 +95,8 @@ services:
 
   reader-api:
     container_name: reader-api
+    depends_on:
+      - database
     build:
       context: "."
       dockerfile_inline: |
@@ -124,9 +126,12 @@ services:
           target: /app/Cargo.toml
     environment:
       RUST_LOG: "info"
+      DATABASE_URL: "postgres://user:password@database/db"
 
   admin-api:
     container_name: admin-api
+    depends_on:
+      - database
     build:
       context: "."
       dockerfile_inline: |
@@ -156,3 +161,21 @@ services:
           target: /app/Cargo.toml
     expose:
       - "8000"
+    environment:
+      RUST_LOG: "debug"
+      DATABASE_URL: "postgres://user:password@database/db"
+
+  database:
+    container_name: database
+    image: postgres:17-alpine
+    restart: always
+    volumes:
+      - "./db/seed/:/docker-entrypoint-initdb.d/:ro"
+    environment:
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "db"
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"

@@ -17,6 +17,7 @@ export default function HomePage({ apiUrl }: HomePageProps): ReactElement {
       filter: {
         path: "/", // This is the home page
       },
+      limit: 1,
     });
     void pageClient
       .send(getPageCommand)

@@ -52,12 +52,11 @@ impl<T> From<std::sync::PoisonError<T>> for Error {
 /// }
 /// ```
 #[async_trait::async_trait]
-pub trait Command: Send + Sync {
-    type Client: Client<Self::Backend>;
-    type Backend: Send + Sync;
+pub trait Command<TBackend: Send + Sync>: Send + Sync {
+    type Client: Client<TBackend>;
     type Output;
 
-    async fn execute(self, backend: Self::Backend) -> Result<Self::Output>;
+    async fn execute(self, backend: TBackend) -> Result<Self::Output>;
 }
 
 /// The `Client` trait represents a client that can dispatch commands to a backend.
@@ -82,7 +81,7 @@ pub trait Command: Send + Sync {
 pub trait Client<TBackend: Send + Sync>: Send + Sync {
     fn backend(&self) -> TBackend;
 
-    async fn send<TCommand: Command<Backend = TBackend, Client = Self>>(
+    async fn send<TCommand: Command<TBackend, Client = Self>>(
         &self,
         command: TCommand,
     ) -> Result<TCommand::Output> {
@@ -124,12 +123,11 @@ mod tests {
         }
 
         #[async_trait::async_trait]
-        impl Command for FilterPage {
+        impl Command<Arc<RwLock<Vec<Record>>>> for FilterPage {
             type Client = MemoryClient;
-            type Backend = Arc<RwLock<Vec<Record>>>;
             type Output = Vec<Record>;
 
-            async fn execute(self, backend: Self::Backend) -> Result<Self::Output> {
+            async fn execute(self, backend: Arc<RwLock<Vec<Record>>>) -> Result<Self::Output> {
                 let backend = backend.read()?;
                 let pages: Vec<Record> = backend
                     .iter()
@@ -204,12 +202,11 @@ mod tests {
         }
 
         #[async_trait::async_trait]
-        impl Command for FilterPage {
+        impl Command<()> for FilterPage {
             type Client = MemoryClient;
-            type Backend = ();
             type Output = String;
 
-            async fn execute(self, _: Self::Backend) -> Result<Self::Output> {
+            async fn execute(self, _: ()) -> Result<Self::Output> {
                 let mut writer = vec![];
 
                 if let Some(id) = &self.id {

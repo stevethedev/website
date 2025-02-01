@@ -1,6 +1,6 @@
 use crate::{
     client::{
-        page::{FilterPage, Page, PageClient},
+        page::{FilterPage, PageClient},
         Client,
     },
     schema::page::Page as PageJson,
@@ -10,7 +10,6 @@ use actix_web::{
     web::{Data, Path, Query},
     HttpResponse, Responder,
 };
-use std::sync::RwLock;
 
 #[derive(serde::Deserialize)]
 struct FilterQuery {
@@ -21,7 +20,7 @@ struct FilterQuery {
 
 #[get("/")]
 async fn list_pages(
-    pages_db: Data<RwLock<Vec<Page>>>,
+    pages_db: Data<sqlx::PgPool>,
     filter_query: Query<FilterQuery>,
 ) -> impl Responder {
     let filter_query = filter_query.into_inner();
@@ -42,7 +41,7 @@ async fn list_pages(
 }
 
 #[get("/{id}/")]
-async fn get_page(pages_db: Data<RwLock<Vec<Page>>>, id: Path<u64>) -> impl Responder {
+async fn get_page(pages_db: Data<sqlx::PgPool>, id: Path<i32>) -> impl Responder {
     let id = id.into_inner();
     let client = PageClient::from(pages_db.into_inner());
     let command = FilterPage::default().field_id(id).limit(1);

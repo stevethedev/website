@@ -29,7 +29,7 @@ describe("GetPages", () => {
 
     await expect(payload?.()).resolves.toEqual([page]);
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost/api/pages/?path=%2Ftest&limit=10",
+      "http://localhost/api/pages/?path=%2Ftest",
     );
   });
 
@@ -53,11 +53,31 @@ describe("GetPages", () => {
     );
   });
 
-  it("should handle invalid limit", () => {
+  it("should handle invalid limit", async () => {
     const getPages = new GetPages({ filter: { path: "/test" }, limit: 0 });
 
-    expect(() => getPages.execute(config)).rejects.toThrow(
+    await expect(getPages.execute(config)).rejects.toThrow(
       "Limit must be an integer greater than 0.",
+    );
+  });
+
+  it("should fetch pages with offset", async () => {
+    fetchMock.mockResponseOnce(JSON.stringify([page]));
+
+    const getPages = new GetPages({ filter: { path: "/test" }, offset: 1 });
+    const { payload } = await getPages.execute(config);
+
+    await expect(payload?.()).resolves.toEqual([page]);
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost/api/pages/?path=%2Ftest&offset=1",
+    );
+  });
+
+  it("should handle invalid offset", async () => {
+    const getPages = new GetPages({ filter: { path: "/test" }, offset: -1 });
+
+    await expect(getPages.execute(config)).rejects.toThrow(
+      "Offset must be an integer greater than or equal to 0.",
     );
   });
 });

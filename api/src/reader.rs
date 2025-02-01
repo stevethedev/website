@@ -1,10 +1,8 @@
-use crate::client::page::Page;
 use actix_web::{
     middleware::Logger,
     web::{scope, Data},
     App, HttpServer,
 };
-use std::sync::RwLock;
 
 mod client;
 mod route;
@@ -13,13 +11,12 @@ mod schema;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init();
+    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = sqlx::PgPool::connect(&database_url)
+        .await
+        .expect("Failed to connect to database");
+    let pages_db = Data::new(pool);
 
-    let pages_db = Data::new(RwLock::new(vec![Page {
-        id: 1,
-        title: "Hello, world!".to_string(),
-        path: "/".to_string(),
-        content: "# Hello World!\nThis is a sample body that was written in markdown.".to_string(),
-    }]));
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::default())

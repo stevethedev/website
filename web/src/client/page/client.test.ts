@@ -24,7 +24,7 @@ describe("Client", () => {
 
     const result = await getPages.execute(config);
     expect(global.fetch).toHaveBeenCalledWith(
-      "http://localhost/api/pages/?path=%2Ftest&limit=10",
+      "http://localhost/api/pages/?path=%2Ftest",
     );
     expect(result.payload).toBeDefined();
   });
