@@ -20,14 +20,17 @@ schema: setup
 	@node ./scripts/schema.mjs
 
 serve: setup schema install
-	docker compose up --watch --build -d
+	docker compose up --watch --build
 
-serve-rebuild\:%:
+rebuild\:%:
 	docker compose up -d --no-deps --build $*
+
+restart\:%:
+	docker compose restart $*
 
 setup:
 	@git config core.hooksPath .githooks
-	@npm install --no-save quicktype prettier
+	@npm install --no-save quicktype-core prettier ts-morph
 
 test: setup schema install
 	@cd web && npm test
