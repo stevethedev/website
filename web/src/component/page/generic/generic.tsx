@@ -4,18 +4,20 @@ import Article from "@/component/ui/article";
 import Markdown from "@/component/ui/markdown";
 import type { Page } from "@/schema/page";
 import { type ReactElement, useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
-export interface HomePageProps {
+export interface PageProps {
   readonly apiUrl: string;
 }
 
-export default function HomePage({ apiUrl }: HomePageProps): ReactElement {
+export default function GenericPage({ apiUrl }: PageProps): ReactElement {
+  const { pathname } = useLocation();
   const [page, setPage] = useState<Page | null>(null);
   useEffect(() => {
     const pageClient = new PageClient({ baseUrl: apiUrl });
     const getPageCommand = new GetPages({
       filter: {
-        path: "/", // This is the home page
+        path: pathname, // This is the home page
       },
       limit: 1,
     });
@@ -24,7 +26,7 @@ export default function HomePage({ apiUrl }: HomePageProps): ReactElement {
       .then((getPageOutput) => getPageOutput.payload())
       .then(([page = null]) => page)
       .then(setPage);
-  }, [setPage]);
+  }, [setPage, pathname]);
 
   return (
     <TwoColumnLayout>

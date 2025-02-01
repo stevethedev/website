@@ -2,18 +2,34 @@
 
 :local(.two-column) {
   :local(.viewport) {
+    width: var(--screen-xl);
+    align-self: center;
     grid-template-columns: auto 20rem;
   }
 }
 
-:local(.header) {
+:local(.container) {
+  display: flex;
+  justify-content: center;
+}
+
+:local(.header-container) {
   background-color: var(--brand-page-header);
+}
+
+:local(.header) {
   padding: 1.5rem 2rem;
+  width: var(--screen-xl);
+}
+
+:local(.nav-container) {
+  box-shadow: 0.05rem 0.05rem 0.2rem 0.05rem var(--color-shadow);
+  background-color: var(--brand-navigation-bg);
 }
 
 :local(.nav) {
+  width: var(--screen-xl);
   padding: 0 1rem;
-  box-shadow: 0.05rem 0.05rem 0.2rem 0.05rem var(--color-shadow);
 }
 
 :local(.column) {

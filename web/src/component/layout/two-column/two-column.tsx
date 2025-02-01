@@ -51,8 +51,16 @@ export default function TwoColumnLayout({
   ];
   return (
     <BaseLayout className={getClassName(styles["two-column"], className)}>
-      <PageHeader className={styles["header"]} links={links} />
-      <MainNav className={styles["nav"]} linkTree={linkTree} />
+      <section
+        className={getClassName(styles.container, styles["header-container"])}
+      >
+        <PageHeader className={styles["header"]} links={links} />
+      </section>
+      <section
+        className={getClassName(styles.container, styles["nav-container"])}
+      >
+        <MainNav className={styles["nav"]} linkTree={linkTree} />
+      </section>
       <Viewport className={styles["viewport"]}>
         <main className={styles.column}>{children}</main>
         <aside className={styles.column}>
