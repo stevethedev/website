@@ -18,7 +18,7 @@ async fn main() -> std::io::Result<()> {
         id: 1,
         title: "Hello, world!".to_string(),
         path: "/".to_string(),
-        content: "Hello, body!".to_string(),
+        content: "# Hello World!\nThis is a sample body that was written in markdown.".to_string(),
     }]));
     HttpServer::new(move || {
         App::new()

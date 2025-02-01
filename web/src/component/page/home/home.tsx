@@ -1,6 +1,7 @@
 import PageClient, { GetPages } from "@/client/page";
 import TwoColumnLayout from "@/component/layout/two-column";
 import Article from "@/component/ui/article";
+import Markdown from "@/component/ui/markdown";
 import type { Page } from "@/schema/page";
 import { type ReactElement, useEffect, useState } from "react";
 
@@ -28,7 +29,7 @@ export default function HomePage({ apiUrl }: HomePageProps): ReactElement {
     <TwoColumnLayout>
       <Article>
         {page?.title}
-        {page?.content}
+        <Markdown>{page?.content}</Markdown>
       </Article>
     </TwoColumnLayout>
   );
