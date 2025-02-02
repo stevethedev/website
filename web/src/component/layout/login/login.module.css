@@ -1,0 +1,11 @@
+@import url("@/styles/core/variables.module.css");
+
+:local(.login) {
+  :local(.viewport) {
+    width: fit-content;
+    align-self: center;
+    grid-template-columns: auto;
+    justify-content: center;
+    align-items: center;
+  }
+}

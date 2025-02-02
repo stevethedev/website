@@ -50,7 +50,7 @@ export default function TwoColumnLayout({
     { label: "About", to: "/about" },
   ];
   return (
-    <BaseLayout className={getClassName(styles["two-column"], className)}>
+    <BaseLayout className={[styles["two-column"], className]}>
       <section
         className={getClassName(styles.container, styles["header-container"])}
       >

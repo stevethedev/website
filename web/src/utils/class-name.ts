@@ -1,6 +1,6 @@
 export type ClassName =
   | string
-  | Record<string, boolean>
+  | Record<string, boolean | undefined>
   | ClassName[]
   | null
   | undefined;

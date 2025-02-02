@@ -23,7 +23,7 @@ export default function GenericPage({ apiUrl }: PageProps): ReactElement {
     });
     void pageClient
       .send(getPageCommand)
-      .then((getPageOutput) => getPageOutput.payload())
+      .then((getPageOutput) => getPageOutput.payload?.() ?? [])
       .then(([page = null]) => page)
       .then(setPage);
   }, [setPage, pathname]);

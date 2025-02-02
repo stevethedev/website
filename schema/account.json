@@ -1,0 +1,28 @@
+{
+  "$id": "account.json",
+  "$ref": "#/definitions/Account",
+  "title": "Account",
+  "definitions": {
+    "Account": {
+      "type": "object",
+      "description": "A user account",
+      "additionalProperties": false,
+      "required": ["id", "username", "displayName"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The unique identifier of the account"
+        },
+        "username": {
+          "type": "string",
+          "description": "The username of the account"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The display name of the account"
+        }
+      }
+    }
+  }
+}

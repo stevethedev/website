@@ -1,0 +1,41 @@
+@import url("../../../styles/index.module.css");
+
+:local(.container) {
+  display: flex;
+  flex-direction: column;
+}
+
+:local(.label) {
+  font-family: var(--font-header), sans-serif;
+  font-weight: bold;
+  font-size: 0.8em;
+  padding: 0 0.2rem;
+}
+
+:local(.input) {
+  padding: 0.5rem;
+  font-family: var(--font-body), sans-serif;
+  font-size: inherit;
+  border: 1px solid var(--color-gray);
+  border-radius: 0.125rem;
+  box-shadow: 0 0 0 var(--brand-accent) inset;
+  transition:
+    box-shadow var(--timing-instant),
+    border var(--timing-instant),
+    outline var(--timing-instant);
+  outline: 0 solid transparent;
+
+  &:focus-visible,
+  &:focus,
+  &:focus-within,
+  &:target,
+  &:active {
+    outline: 1px solid var(--brand-accent);
+    border: 1px solid var(--brand-accent);
+    box-shadow: 0 0 0.1rem var(--brand-accent) inset;
+  }
+
+  &[type="password"] {
+    letter-spacing: 0.2em;
+  }
+}

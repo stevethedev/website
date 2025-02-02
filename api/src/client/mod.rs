@@ -2,6 +2,7 @@
 //! It includes the `Command` trait for defining commands with associated input and output types,
 //! and the `Client` trait for dispatching these commands to a backend.
 
+pub mod account;
 pub mod page;
 
 /// A type alias for a `Result` with a boxed dynamic error.
@@ -28,6 +29,12 @@ impl std::fmt::Display for Error {
 impl<T> From<std::sync::PoisonError<T>> for Error {
     fn from(value: std::sync::PoisonError<T>) -> Self {
         Self::GenericError(value.to_string())
+    }
+}
+
+impl From<sqlx::Error> for Error {
+    fn from(error: sqlx::Error) -> Self {
+        Self::GenericError(error.to_string())
     }
 }
 

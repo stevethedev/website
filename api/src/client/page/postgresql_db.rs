@@ -16,12 +16,6 @@ impl From<Arc<PgPool>> for PageClient<Arc<PgPool>> {
     }
 }
 
-impl From<sqlx::Error> for Error {
-    fn from(error: sqlx::Error) -> Self {
-        Self::GenericError(error.to_string())
-    }
-}
-
 #[async_trait::async_trait]
 impl Command<Arc<PgPool>> for FilterPage {
     type Client = PageClient<Arc<PgPool>>;

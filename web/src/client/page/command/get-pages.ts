@@ -1,4 +1,4 @@
-import type { Command } from "@/client";
+import type { Command, MetadataResponse } from "@/client";
 import type { PageClientConfig } from "@/client/page";
 import { Convert, type Page } from "@/schema/page";
 import isNumber from "@std-types/is-number";
@@ -9,7 +9,7 @@ export interface GetPagesCommandInput {
   readonly offset?: number;
 }
 
-export interface GetPagesCommandOutput {
+export interface GetPagesCommandOutput extends MetadataResponse {
   payload?: () => Promise<Page[]>;
 }
 
@@ -30,7 +30,9 @@ export class GetPages
     this.#offset = getPagesCommandInput.offset;
   }
 
-  async execute(config: Readonly<Required<PageClientConfig>>) {
+  async execute(
+    config: Readonly<Required<PageClientConfig>>,
+  ): Promise<GetPagesCommandOutput> {
     const baseUrl = config.baseUrl.endsWith("/")
       ? config.baseUrl
       : `${config.baseUrl}/`;
@@ -59,9 +61,17 @@ export class GetPages
 
     const response = await fetch(url.toString());
 
+    const $metadata = {
+      status: response.status,
+    };
+
+    if (!response.ok) {
+      return { $metadata };
+    }
+
     const payload = async (): Promise<Page[]> =>
       await response.text().then(Convert.toPageArray);
 
-    return { payload };
+    return { $metadata, payload };
   }
 }

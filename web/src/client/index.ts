@@ -2,6 +2,13 @@ export interface Command<TConfig, TOutput> {
   execute(config: Readonly<TConfig>): Promise<TOutput>;
 }
 
+export interface MetadataResponse {
+  readonly $metadata: {
+    readonly status: number;
+    readonly [key: string]: unknown;
+  };
+}
+
 export class Client<TConfig> {
   readonly #config: Readonly<TConfig>;
 

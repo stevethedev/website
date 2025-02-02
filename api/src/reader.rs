@@ -4,6 +4,7 @@ use actix_web::{
     App, HttpServer,
 };
 
+mod auth;
 mod client;
 mod route;
 mod schema;
@@ -12,15 +13,16 @@ mod schema;
 async fn main() -> std::io::Result<()> {
     env_logger::init();
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool = sqlx::PgPool::connect(&database_url)
-        .await
-        .expect("Failed to connect to database");
-    let pages_db = Data::new(pool);
+    let db_pool = Data::new(
+        sqlx::PgPool::connect(&database_url)
+            .await
+            .expect("Failed to connect to database"),
+    );
 
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::default())
-            .app_data(pages_db.clone())
+            .app_data(db_pool.clone())
             .service(
                 scope("/pages")
                     .service(route::page::list_pages)
