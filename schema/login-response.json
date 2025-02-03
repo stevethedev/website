@@ -1,0 +1,23 @@
+{
+  "$id": "login-response.json",
+  "$ref": "#/definitions/LoginResponse",
+  "title": "LoginResponse",
+  "definitions": {
+    "LoginResponse": {
+      "type": "object",
+      "description": "A user authentication request",
+      "additionalProperties": false,
+      "required": ["jwt", "expires"],
+      "properties": {
+        "jwt": {
+          "type": "string",
+          "description": "Authentication JWT"
+        },
+        "expires": {
+          "type": "string",
+          "description": "Timestamp for the JWT's expiration"
+        }
+      }
+    }
+  }
+}

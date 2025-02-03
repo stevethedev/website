@@ -1,29 +1,41 @@
 import type { Page } from "@/schema/page";
-import { describe, expect, it, jest } from "@jest/globals";
+import {
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jest,
+} from "@jest/globals";
+import fetchMock from "jest-fetch-mock";
 import type { GetPagesCommandInput } from "./command/get-pages";
-import { GetPages } from "./command/get-pages";
+import { GetPagesCommand } from "./command/get-pages";
 
 describe("Client", () => {
   const config = { baseUrl: "http://localhost/api" };
 
+  beforeAll(() => {
+    fetchMock.enableMocks();
+  });
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+    fetchMock.resetMocks();
+  });
+
   it("should construct with filter", () => {
     const input: GetPagesCommandInput = { filter: { title: "test" } };
-    const getPages = new GetPages(input);
+    const getPages = new GetPagesCommand(input);
     expect(getPages).toBeDefined();
   });
 
   it("should fetch pages with correct query parameters", async () => {
     const input: GetPagesCommandInput = { filter: { path: "/test" } };
-    const getPages = new GetPages(input);
-
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        text: () => Promise.resolve("[]"),
-      } as Response),
-    );
+    const getPages = new GetPagesCommand(input);
+    fetchMock.mockOnce("[]");
 
     const result = await getPages.execute(config);
-    expect(global.fetch).toHaveBeenCalledWith(
+    expect(fetchMock).toHaveBeenCalledWith(
       "http://localhost/api/pages/?path=%2Ftest",
     );
     expect(result.payload).toBeDefined();
@@ -31,19 +43,13 @@ describe("Client", () => {
 
   it("should convert response to Page array", async () => {
     const input: GetPagesCommandInput = { filter: { path: "/test" } };
-    const getPages = new GetPages(input);
+    const getPages = new GetPagesCommand(input);
 
     const mockPages: Page[] = [
       { path: "/test", title: "test", content: "content" },
     ];
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        text: () => Promise.resolve(JSON.stringify(mockPages)),
-      } as Response),
-    );
-
+    fetchMock.mockOnce(JSON.stringify(mockPages));
     const result = await getPages.execute(config);
-    const pages = await result.payload();
-    expect(pages).toEqual(mockPages);
+    await expect(result.payload?.()).resolves.toEqual(mockPages);
   });
 });

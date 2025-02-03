@@ -1,4 +1,4 @@
-import PageClient, { GetPages } from "@/client/page";
+import PageClient, { GetPagesCommand } from "@/client/page";
 import TwoColumnLayout from "@/component/layout/two-column";
 import Article from "@/component/ui/article";
 import Markdown from "@/component/ui/markdown";
@@ -15,7 +15,7 @@ export default function GenericPage({ apiUrl }: PageProps): ReactElement {
   const [page, setPage] = useState<Page | null>(null);
   useEffect(() => {
     const pageClient = new PageClient({ baseUrl: apiUrl });
-    const getPageCommand = new GetPages({
+    const getPageCommand = new GetPagesCommand({
       filter: {
         path: pathname, // This is the home page
       },
@@ -23,7 +23,7 @@ export default function GenericPage({ apiUrl }: PageProps): ReactElement {
     });
     void pageClient
       .send(getPageCommand)
-      .then((getPageOutput) => getPageOutput.payload())
+      .then((getPageOutput) => getPageOutput.payload?.() ?? [])
       .then(([page = null]) => page)
       .then(setPage);
   }, [setPage, pathname]);

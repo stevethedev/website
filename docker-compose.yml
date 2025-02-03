@@ -164,6 +164,7 @@ services:
     environment:
       RUST_LOG: "debug"
       DATABASE_URL: "postgres://user:password@database/db"
+      JWT_SECRET: "localdevsecret"
 
   database:
     container_name: database

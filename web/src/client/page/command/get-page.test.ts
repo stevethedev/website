@@ -1,4 +1,4 @@
-import { GetPage } from "@/client/page/command/get-page";
+import { GetPageCommand } from "@/client/page/command/get-page";
 import type { PageClientConfig } from "@/client/page/config";
 import type { Page } from "@/schema/page";
 import { beforeEach, describe, expect, it } from "@jest/globals";
@@ -6,7 +6,7 @@ import fetchMock from "jest-fetch-mock";
 
 fetchMock.enableMocks();
 
-describe("GetPage", () => {
+describe("GetPageCommand", () => {
   const config: Required<PageClientConfig> = {
     baseUrl: "http://localhost/api",
   };
@@ -24,7 +24,7 @@ describe("GetPage", () => {
   it("should fetch a page by id", async () => {
     fetchMock.mockResponseOnce(JSON.stringify(page));
 
-    const getPage = new GetPage({ id: "1" });
+    const getPage = new GetPageCommand({ id: "1" });
     const { payload } = await getPage.execute(config);
 
     await expect(payload?.()).resolves.toEqual(page);
@@ -34,7 +34,7 @@ describe("GetPage", () => {
   it("should handle fetch errors", async () => {
     fetchMock.mockRejectOnce(new Error("Failed to fetch"));
 
-    const getPage = new GetPage({ id: "1" });
+    const getPage = new GetPageCommand({ id: "1" });
 
     await expect(getPage.execute(config)).rejects.toThrow("Failed to fetch");
   });
