@@ -318,6 +318,7 @@ dependencies = [
  "chrono",
  "env_logger",
  "jsonwebtoken",
+ "log",
  "serde",
  "sqlx",
  "tokio",

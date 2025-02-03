@@ -30,7 +30,12 @@ restart\:%:
 
 setup:
 	@git config core.hooksPath .githooks
-	@npm install --no-save quicktype-core prettier ts-morph
+	@npm init -f
+	@npm install -D quicktype-core prettier ts-morph
+
+update-sql-cache:
+	@docker compose up --wait database
+	@cd api && cargo sqlx prepare -D 'postgres://user:password@localhost/db'
 
 test: setup schema install
 	@cd web && npm test

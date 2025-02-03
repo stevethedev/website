@@ -9,7 +9,7 @@ import {
 } from "@jest/globals";
 import fetchMock from "jest-fetch-mock";
 import type { GetPagesCommandInput } from "./command/get-pages";
-import { GetPages } from "./command/get-pages";
+import { GetPagesCommand } from "./command/get-pages";
 
 describe("Client", () => {
   const config = { baseUrl: "http://localhost/api" };
@@ -25,13 +25,13 @@ describe("Client", () => {
 
   it("should construct with filter", () => {
     const input: GetPagesCommandInput = { filter: { title: "test" } };
-    const getPages = new GetPages(input);
+    const getPages = new GetPagesCommand(input);
     expect(getPages).toBeDefined();
   });
 
   it("should fetch pages with correct query parameters", async () => {
     const input: GetPagesCommandInput = { filter: { path: "/test" } };
-    const getPages = new GetPages(input);
+    const getPages = new GetPagesCommand(input);
     fetchMock.mockOnce("[]");
 
     const result = await getPages.execute(config);
@@ -43,7 +43,7 @@ describe("Client", () => {
 
   it("should convert response to Page array", async () => {
     const input: GetPagesCommandInput = { filter: { path: "/test" } };
-    const getPages = new GetPages(input);
+    const getPages = new GetPagesCommand(input);
 
     const mockPages: Page[] = [
       { path: "/test", title: "test", content: "content" },

@@ -1,34 +1,31 @@
-import AccountClient, { Login } from "@/client/account";
+import AccountClient, { LoginCommand } from "@/client/account";
 import LoginLayout from "@/component/layout/login";
+import { useAuth } from "@/component/provider/auth-provider";
 import type { LoginFormValues } from "@/component/ui/login-form";
 import LoginForm from "@/component/ui/login-form";
-import type { LoginResponse } from "@/schema/login-response";
 import { type ReactElement, useCallback, useState } from "react";
 
 export interface LoginPageProps {
   readonly apiUrl: string;
-  readonly setJwt: (jwtData: null | LoginResponse) => void;
 }
 
-export default function LoginPage({
-  apiUrl,
-  setJwt,
-}: LoginPageProps): ReactElement {
+export default function LoginPage({ apiUrl }: LoginPageProps): ReactElement {
+  const { login: onLogin } = useAuth();
   const [shake, setShake] = useState(false);
-  const onLogin = useCallback(
+  const onLoginInternal = useCallback(
     (loginFormValues: LoginFormValues) => {
       const client = new AccountClient({ baseUrl: apiUrl });
       client
-        .send(new Login(loginFormValues))
+        .send(new LoginCommand(loginFormValues))
         .then(async ({ payload }) => (await payload?.()) ?? null)
         .then((value) => {
           if (value === null) {
             setShake(true);
           }
-          setJwt(value);
+          onLogin(value);
         });
     },
-    [apiUrl, setJwt],
+    [apiUrl, onLogin],
   );
 
   return (
@@ -36,7 +33,7 @@ export default function LoginPage({
       <LoginForm
         shake={shake}
         onInput={() => setShake(false)}
-        onLogin={onLogin}
+        onLogin={onLoginInternal}
       />
     </LoginLayout>
   );

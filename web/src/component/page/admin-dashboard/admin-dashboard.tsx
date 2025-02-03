@@ -1,5 +1,7 @@
 import AdminLayout from "@/component/layout/admin";
+import styles from "@/component/layout/admin/admin.module.css";
 import Article from "@/component/ui/article";
+import PageHeader from "@/component/ui/page-header";
 import { type ReactElement } from "react";
 
 export interface AdminDashboardPageProps {
@@ -12,7 +14,9 @@ export default function AdminDashboardPage({
   void apiUrl;
   return (
     <AdminLayout>
-      <Article>Dashboard.</Article>
+      <Article>
+        <PageHeader className={styles["header"]} links={[]} />
+      </Article>
     </AdminLayout>
   );
 }

@@ -13,7 +13,7 @@ export interface GetPagesCommandOutput extends MetadataResponse {
   payload?: () => Promise<Page[]>;
 }
 
-export class GetPages
+export class GetPagesCommand
   implements Command<PageClientConfig, GetPagesCommandOutput>
 {
   readonly #searchParams: [string, string][];

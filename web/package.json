@@ -39,6 +39,7 @@
     "@storybook/react": "^8.5.1",
     "@storybook/react-vite": "^8.5.1",
     "@storybook/test": "^8.5.1",
+    "@testing-library/react": "^16.2.0",
     "@types/react-dom": "^19.0.3",
     "cmd-ts": "^0.13.0",
     "depcheck": "^1.4.7",

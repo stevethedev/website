@@ -1,36 +1,32 @@
 import type { Command, MetadataResponse } from "@/client";
 import type { AccountClientConfig } from "@/client/account/config";
-import { Convert as ConvertLogin } from "@/schema/login";
 import {
   Convert as ConvertResponse,
   type LoginResponse,
 } from "@/schema/login-response";
 
-export interface LoginCommandInput {
-  readonly username: string;
-  readonly password: string;
+export interface RenewCommandInput {
+  readonly token: string;
 }
 
-export interface LoginCommandOutput extends MetadataResponse {
+export interface RenewCommandOutput extends MetadataResponse {
   payload?: () => Promise<LoginResponse>;
 }
 
-export class LoginCommand
-  implements Command<AccountClientConfig, LoginCommandOutput>
+export class RenewCommand
+  implements Command<AccountClientConfig, RenewCommandOutput>
 {
   readonly #targetPath: string;
-  readonly #username: string;
-  readonly #password: string;
+  readonly #token: string;
 
-  constructor(loginCommandInput: LoginCommandInput) {
-    this.#targetPath = "login/";
-    this.#username = loginCommandInput.username;
-    this.#password = loginCommandInput.password;
+  constructor(renewCommandInput: RenewCommandInput) {
+    this.#targetPath = "login/renew/";
+    this.#token = renewCommandInput.token;
   }
 
   async execute(
     config: Readonly<Required<AccountClientConfig>>,
-  ): Promise<LoginCommandOutput> {
+  ): Promise<RenewCommandOutput> {
     const baseUrl = config.baseUrl.endsWith("/")
       ? config.baseUrl
       : `${config.baseUrl}/`;
@@ -39,11 +35,8 @@ export class LoginCommand
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${this.#token}`,
       },
-      body: ConvertLogin.loginToJson({
-        username: this.#username,
-        password: this.#password,
-      }),
     });
 
     const $metadata = {

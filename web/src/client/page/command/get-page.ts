@@ -11,7 +11,7 @@ export interface GetPageCommandOutput extends MetadataResponse {
   payload?: () => Promise<Page>;
 }
 
-export class GetPage
+export class GetPageCommand
   implements Command<PageClientConfig, GetPageCommandOutput>
 {
   readonly #targetPath: string;

@@ -18,6 +18,29 @@ pub struct Account {
     pub display_name: String,
 }
 
+impl TryFrom<crate::schema::account::Account> for Account {
+    type Error = <i32 as TryFrom<i64>>::Error;
+
+    fn try_from(value: crate::schema::account::Account) -> Result<Self, Self::Error> {
+        let id = i32::try_from(value.id)?;
+        Ok(Self {
+            id,
+            username: value.username,
+            display_name: value.display_name,
+        })
+    }
+}
+
+impl Into<crate::schema::account::Account> for Account {
+    fn into(self) -> crate::schema::account::Account {
+        crate::schema::account::Account {
+            id: i64::from(self.id),
+            username: self.username,
+            display_name: self.display_name,
+        }
+    }
+}
+
 #[derive(Default)]
 pub struct Login {
     pub username: String,
@@ -56,5 +79,15 @@ impl Into<Account> for PasswordedAccount {
             username: self.username,
             display_name: self.display_name,
         }
+    }
+}
+
+pub struct GetAccount {
+    pub id: i32,
+}
+
+impl GetAccount {
+    pub fn by_id(id: i32) -> Self {
+        Self { id }
     }
 }

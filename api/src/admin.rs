@@ -1,18 +1,14 @@
 use crate::auth::JwtDurationSeconds;
-use actix_web::web::{scope, Data};
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use actix_web::{
+    middleware::Logger,
+    web::{scope, Data},
+    App, HttpServer,
+};
 
 mod auth;
 mod client;
 mod route;
 mod schema;
-
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().json(schema::hello_world::HelloWorld {
-        message: "Hello, admin!".to_string(),
-    })
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -29,10 +25,16 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .wrap(Logger::default())
             .app_data(db_pool.clone())
             .app_data(jwt_manager.clone())
             .app_data(token_duration_seconds.clone())
-            .service(scope("/login").service(route::login::login))
+            .service(
+                scope("/login")
+                    .service(route::login::login)
+                    .service(route::login::renew)
+                    .service(route::login::whoami),
+            )
     })
     .bind(("0.0.0.0", 8000))?
     .run()

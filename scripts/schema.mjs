@@ -202,7 +202,7 @@ async function rs(srcJson, outFile, jsonFiles) {
  * @param srcJson {string}
  * @param outFile {string}
  * @param jsonFiles {string[]}
- * @param options {Partial<import("quicktype-core").Options>}
+ * @param rendererOptions {Partial<import("quicktype-core").Options>}
  * @returns {Promise<void>}
  */
 async function quicktype(
