@@ -43,7 +43,7 @@
     "@types/react-dom": "^19.0.3",
     "cmd-ts": "^0.13.0",
     "depcheck": "^1.4.7",
-    "esbuild": "^0.24.2",
+    "esbuild": "^0.25.0",
     "eslint": "^9.19.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-react": "^7.37.4",
