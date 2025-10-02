@@ -40,7 +40,7 @@
     "@storybook/react-vite": "^8.5.3",
     "@storybook/test": "^8.5.1",
     "@testing-library/react": "^16.2.0",
-    "@types/react-dom": "^19.0.3",
+    "@types/react-dom": "^19.2.0",
     "cmd-ts": "^0.13.0",
     "depcheck": "^1.4.7",
     "esbuild": "^0.25.0",
@@ -68,7 +68,7 @@
   "dependencies": {
     "@std-types/is-number": "^1.2.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react-dom": "^19.2.0",
     "react-markdown": "^9.0.3",
     "react-router": "^7.1.5"
   }
